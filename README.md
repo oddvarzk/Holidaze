@@ -1,50 +1,62 @@
-# React + TypeScript + Vite
+# Holidaze
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Holidaze is a booking platform that connects users with venue managers, enabling users to find and book accommodations quickly and securely. Built with **Vite**, **React**, and **TypeScript**, this project aims to provide a smooth and efficient booking experience, with a focus on reliability and ease of use.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Running the Project](#running-the-project)
+- [Folder Structure](#folder-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## Project Overview
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+Holidaze allows users to explore and book accommodations while offering venue managers a streamlined way to manage listings and bookings. The platform's features include:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- **Search and Filtering**: Users can search for venues and apply filters based on location, price, and availability.
+- **Responsive Design**: Built with Tailwind CSS to ensure a seamless experience across all devices.
+- **Authentication**: Secure user authentication with API-based backend.
+- **Venue Management**: Venue managers can add, update, and manage their listings and track bookings.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+---
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Features
+
+- **User Authentication**: Login, register, and manage profiles.
+- **Booking Management**: Users can view and manage their bookings, while venue managers can handle incoming reservations.
+- **Search & Filter Options**: Find listings with relevant filters for a personalized experience.
+- **Responsive & Accessible**: Designed for both mobile and desktop, focusing on accessibility and usability.
+
+---
+
+## Tech Stack
+
+- **Vite** - Fast and modern front-end build tool
+- **React** - JavaScript library for building user interfaces
+- **TypeScript** - Superset of JavaScript for static type-checking
+- **Tailwind CSS** - Utility-first CSS framework for styling
+- **API** - Provided by university, handling backend functionalities
+
+---
+
+## Getting Started
+
+To get a local copy up and running, follow these steps.
+
+### Prerequisites
+
+- **Node.js** and **npm** - Make sure Node.js and npm are installed on your system.
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/holidaze.git
