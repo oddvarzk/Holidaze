@@ -38,7 +38,6 @@ Holidaze allows users to explore and book accommodations while offering venue ma
 ---
 
 ## Tech Stack
-## Tech Stack
 
 <span>
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript" width="30" height="30"/>
