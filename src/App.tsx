@@ -1,8 +1,15 @@
-export function App(){
-  
+import { Routes, Route } from "react-router-dom";
+import { Layout } from "./layouts";
+import Home from "./pages/Home";
+
+function App() {
   return (
     <div>
-      <h1 className="text-center">We made it</h1>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
