@@ -15,11 +15,11 @@ export function Home() {
 
   return (
     <div
-      className="bg-no-repeat bg-[position:20%_60%] bg-[length:100%] h-[40vh] w-full flex items-center justify-center"
+      className="bg-no-repeat bg-[position:20%_60%] bg-[length:100%] h-[40vh] w-full flex items-center justify-center opacity-120"
       style={{ backgroundImage: `url(${greeceBackg})` }}
     >
       <div className="text-center">
-        <h1 className="text-4xl font-Montserrat font-normal text-white animate-fadeIn">{words[currentWordIndex]}</h1>
+        <h1 className="text-4xl font-Montserrat font-normal text-white animate-pulse">{words[currentWordIndex]}</h1>
       </div>
     </div>
   );
