@@ -29,8 +29,8 @@ export function Nav() {
         } md:flex`}
       >
         <li className="hover:underline">
-          <Link to="/contact" onClick={() => setIsOpen(false)}>
-            List your property
+          <Link to="/createVenue" onClick={() => setIsOpen(false)}>
+            List your venue
           </Link>
         </li>
         <li className="hover:underline">
