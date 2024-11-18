@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        paleSand: "##F5F5F0",
+        paleSand: "#F5F5F0",
         charcoal: "#333333",
         tin: "#015D67",
         tiner: "#004850",
