@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import greeceBackg from '../../assets/greeceBackg.jpg';
 import CheckinData from '../../components/CheckinData';
 import CheckoutData from '../../components/CheckoutData';
+import planeIcon from "../../assets/plane.svg";
+
 
 export function Home() {
   const words = ['Tranquility.', 'Relax.', 'Adventure.', 'Explore.', 'Peace.'];
@@ -26,13 +28,20 @@ export function Home() {
           </h1>
         </div>
       </div>
-      <div className='flex justify-center gap-5'>
+      <div className='flex justify-center gap-5 mb-5'>
         <CheckinData/>
         <CheckoutData/>
       </div>
-      <div className='flex justify-center'>
-        <div>
-
+      <div className='text-center py-5 px-2 mt-5'>
+        <h1 className='font-Playfair text-tiner text-2xl'>Find your sanctuary</h1>
+        <p className='font-Montserrat text-gray-500 font-light text-sm'>Explore a curated collection of exquisite stays from around the globe. 
+          Whether you're seeking a tranquil beachfront bungalow, a cozy mountain retreat,
+           or a vibrant cityscape condo, Holidaze connects you to the perfect destination. 
+        </p>
+      </div>
+      <div className='flex justify-center py-5 px-2'>
+        <div className=''>
+          <img src={planeIcon} alt="Plane Icon" className="h-28 w-28" />
         </div>
         <div>
           
