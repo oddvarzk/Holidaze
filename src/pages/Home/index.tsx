@@ -19,7 +19,7 @@ export function Home() {
   }, [words.length]);
 
   return (
-    <div>
+    <div className="bg-paleSand">
       <div
         className="relative bg-no-repeat bg-cover h-[50vh] w-full flex items-center justify-center bg-top sm:bg-center"
         style={{ backgroundImage: `url(${greeceBackg})` }}
