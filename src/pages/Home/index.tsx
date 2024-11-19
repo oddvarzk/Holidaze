@@ -21,12 +21,12 @@ export function Home() {
   return (
     <div className="bg-paleSand">
       <div
-        className="relative bg-no-repeat bg-cover h-[50vh] w-full flex items-center justify-center bg-top sm:bg-center"
+        className="relative bg-no-repeat bg-cover md:h-[60vh] h-[40vh] w-full flex items-center justify-center bg-top sm:bg-center"
         style={{ backgroundImage: `url(${greeceBackg})` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-30"></div>
         <div className="w-full h-full flex justify-center items-center">
-          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-Montserrat font-normal text-white animate-pulse">
+          <h1 className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-Montserrat font-light text-paleSand animate-pulse">
             {words[currentWordIndex]}
           </h1>
         </div>
@@ -46,7 +46,7 @@ export function Home() {
           perfect destination.
         </p>
       </div>
-      <div className="flex justify-center gap-16 py-5 px-2">
+      <div className="flex md:justify-between lg:px-60 justify-center gap-16 py-7 px-2">
         <div className="px-2">
           <img src={planeIcon} alt="Plane Icon" className="h-28 w-28" />
         </div>
@@ -55,6 +55,14 @@ export function Home() {
         </div>
         <div className="px-2">
           <img src={mapIcon} alt="Map Icon" className="h-28 w-28" />
+        </div>
+      </div>
+      <div className="px-5 py-5">
+        <h1 className="font-Playfair text-tiner text-3xl py-2">
+          Recommended Go To's
+        </h1>
+        <div>
+          <h1 className="">Hello</h1>
         </div>
       </div>
     </div>
