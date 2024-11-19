@@ -65,7 +65,7 @@ export function Home() {
       <div className="border border-b-2 mt-6"></div>
       <div className="px-5 py-5 mt-4">
         <h1 className="font-Playfair font-normal text-center text-tiner text-3xl py-5">
-          Recommended Go To's
+          Recommended stays
         </h1>
          {/* Recommended Venue Boxes */}
         <div className="flex flex-wrap justify-center py-5 gap-10">
