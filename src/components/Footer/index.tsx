@@ -4,9 +4,6 @@ export function Footer() {
       <div className="flex items-center">
         <p className="font-Metamorphous text-amber-100">Holidaze</p>
       </div>
-      <div className="flex items-center">
-        <p>Icons</p>
-      </div>
     </div>
   );
 }
