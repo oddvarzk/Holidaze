@@ -62,8 +62,9 @@ export function Home() {
           <img src={mapIcon} alt="Map Icon" className="h-28 w-28" />
         </div>
       </div>
-      <div className="px-5 py-5 mt-5">
-        <h1 className="font-Playfair font-normal text-center text-tiner text-3xl py-2">
+      <div className="border border-b-2 mt-6"></div>
+      <div className="px-5 py-5 mt-4">
+        <h1 className="font-Playfair font-normal text-center text-tiner text-3xl py-5">
           Recommended Go To's
         </h1>
          {/* Recommended Venue Boxes */}
