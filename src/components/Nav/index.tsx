@@ -71,7 +71,7 @@ export function Nav() {
           <Link
             to="/login"
             onClick={() => setIsOpen(false)}
-            className="text-gray-500 font-medium py-2 px-4 bg-amber-100 hover:opacity-50"
+            className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
           >
             Login
           </Link>
