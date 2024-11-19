@@ -46,7 +46,7 @@ export function Home() {
           perfect destination.
         </p>
       </div>
-      <div className="flex justify-center gap-20 py-5 px-2">
+      <div className="flex justify-center gap-16 py-5 px-2">
         <div className="px-2">
           <img src={planeIcon} alt="Plane Icon" className="h-28 w-28" />
         </div>
