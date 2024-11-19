@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
 import CheckinData from "../../components/CheckinData";
-import CheckoutData from "../../components/CheckoutData";
 import planeIcon from "../../assets/plane.svg";
 import palmTreeIcon from "../../assets/palmtree.svg";
 import mapIcon from "../../assets/mapIcon.svg";
@@ -33,10 +32,9 @@ export function Home() {
             {words[currentWordIndex]}
           </h1>
         </div>
-      </div>
-      <div className="flex justify-center gap-5 mb-5">
-        <CheckinData />
-        <CheckoutData />
+        <div className="absolute bottom-5 gap-5 mb-5">
+          <CheckinData />
+        </div>
       </div>
       {/* 2nd Main Info */}
       <div className="text-center py-5 px-2 mt-5">
