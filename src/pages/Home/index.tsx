@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
 import CheckinData from "../../components/CheckinData";
 import planeIcon from "../../assets/plane.svg";
@@ -8,17 +7,6 @@ import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 
 export function Home() {
-  const words = ["Tranquility.", "Relax.", "Adventure.", "Explore.", "Peace."];
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, [words.length]);
-
   return (
     <div className="bg-paleSand">
       {/* Main bg and Search data */}
@@ -26,10 +14,10 @@ export function Home() {
         className="relative bg-no-repeat bg-cover md:h-[60vh] h-[40vh] w-full flex items-center justify-center bg-top sm:bg-center"
         style={{ backgroundImage: `url(${greeceBackg})` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-40 text-opacity-0"></div>
         <div className="w-full h-full flex justify-center items-center">
-          <h1 className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-Montserrat font-light text-paleSand animate-pulse">
-            {words[currentWordIndex]}
+          <h1 className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-Montserrat font-light text-white">
+            Escape. Seamless. Unforgetable
           </h1>
         </div>
         <div className="absolute bottom-5 gap-5 mb-5">
@@ -65,113 +53,145 @@ export function Home() {
         <h1 className="font-Playfair font-normal text-center text-tiner text-3xl py-5">
           Recommended stays
         </h1>
-         {/* Recommended Venue Boxes */}
+        {/* Recommended Venue Boxes */}
         <div className="flex flex-wrap justify-center py-5 gap-10">
-          <div className="shadow-lg">
+          <div className="shadow-lg transition-transform duration-300 transform hover:scale-105">
             <div>
               <img src={example} alt="Venue Image" className="h-44 w-64" />
             </div>
             <div className="py-1">
-              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">Loft Condo</h3>
+              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">
+                Loft Condo
+              </h3>
               <div className="flex px-2">
-                <img src={locationIcon} alt="Location Icon" className="h-5 w-6" />
-                <p className="text-tin font-normal text-sm font-Montserrat">New York City, United States</p>
+                <img
+                  src={locationIcon}
+                  alt="Location Icon"
+                  className="h-5 w-6"
+                />
+                <p className="text-tin font-normal text-sm font-Montserrat">
+                  New York City, United States
+                </p>
               </div>
               <div className="px-4 py-1">
                 <p className="text-base font-Montserrat">120 USD /night</p>
               </div>
               <div>
-              <ul className="list-none px-4 font-Montserrat">
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Breakfast included
-                </li>
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Free cancellation
-                </li>
-              </ul>
+                <ul className="list-none px-4 font-Montserrat">
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Breakfast included
+                  </li>
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Free cancellation
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-          <div className="shadow-lg">
+          <div className="shadow-lg transition-transform duration-300 transform hover:scale-105">
             <div>
               <img src={example} alt="Venue Image" className="h-44 w-64" />
             </div>
             <div className="py-1">
-              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">Loft Condo</h3>
+              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">
+                Loft Condo
+              </h3>
               <div className="flex px-2">
-                <img src={locationIcon} alt="Location Icon" className="h-5 w-6" />
-                <p className="text-tin font-normal text-sm font-Montserrat">New York City, United States</p>
+                <img
+                  src={locationIcon}
+                  alt="Location Icon"
+                  className="h-5 w-6"
+                />
+                <p className="text-tin font-normal text-sm font-Montserrat">
+                  New York City, United States
+                </p>
               </div>
               <div className="px-4 py-1">
                 <p className="text-base font-Montserrat">120 USD /night</p>
               </div>
               <div>
-              <ul className="list-none px-4 font-Montserrat">
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Breakfast included
-                </li>
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Free cancellation
-                </li>
-              </ul>
+                <ul className="list-none px-4 font-Montserrat">
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Breakfast included
+                  </li>
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Free cancellation
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-          <div className="shadow-lg">
+          <div className="shadow-lg transition-transform duration-300 transform hover:scale-105">
             <div>
               <img src={example} alt="Venue Image" className="h-44 w-64" />
             </div>
             <div className="py-1">
-              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">Loft Condo</h3>
+              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">
+                Loft Condo
+              </h3>
               <div className="flex px-2">
-                <img src={locationIcon} alt="Location Icon" className="h-5 w-6" />
-                <p className="text-tin font-normal text-sm font-Montserrat">New York City, United States</p>
+                <img
+                  src={locationIcon}
+                  alt="Location Icon"
+                  className="h-5 w-6"
+                />
+                <p className="text-tin font-normal text-sm font-Montserrat">
+                  New York City, United States
+                </p>
               </div>
               <div className="px-4 py-1">
                 <p className="text-base font-Montserrat">120 USD /night</p>
               </div>
               <div>
-              <ul className="list-none px-4 font-Montserrat">
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Breakfast included
-                </li>
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Free cancellation
-                </li>
-              </ul>
+                <ul className="list-none px-4 font-Montserrat">
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Breakfast included
+                  </li>
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Free cancellation
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-          <div className="shadow-lg">
+          <div className="shadow-lg transition-transform duration-300 transform hover:scale-105">
             <div>
               <img src={example} alt="Venue Image" className="h-44 w-64" />
             </div>
             <div className="py-1">
-              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">Loft Condo</h3>
+              <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">
+                Loft Condo
+              </h3>
               <div className="flex px-2">
-                <img src={locationIcon} alt="Location Icon" className="h-5 w-6" />
-                <p className="text-tin font-normal text-sm font-Montserrat">New York City, United States</p>
+                <img
+                  src={locationIcon}
+                  alt="Location Icon"
+                  className="h-5 w-6"
+                />
+                <p className="text-tin font-normal text-sm font-Montserrat">
+                  New York City, United States
+                </p>
               </div>
               <div className="px-4 py-1">
                 <p className="text-base font-Montserrat">120 USD /night</p>
               </div>
               <div>
-              <ul className="list-none px-4 font-Montserrat">
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Breakfast included
-                </li>
-                <li className="flex items-center text-gray-500 text-sm">
-                  <span className="text-gray-400 mr-2">•</span>
-                  Free cancellation
-                </li>
-              </ul>
+                <ul className="list-none px-4 font-Montserrat">
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Breakfast included
+                  </li>
+                  <li className="flex items-center text-gray-500 text-sm">
+                    <span className="text-gray-400 mr-2">•</span>
+                    Free cancellation
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
