@@ -21,7 +21,7 @@ export default function CheckinData() {
       <DatePicker
         selectsEnd
         selected={endDate}
-        onChange={(date: Date | null) => setEndDate(date ?? undefined)} // Handle null by converting to undefined
+        onChange={(date: Date | null) => setEndDate(date ?? undefined)}
         className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-lg text-gray-700 focus:ring-2 focus:ring-green-500 focus:outline-none"
         startDate={startDate}
         endDate={endDate}
