@@ -28,9 +28,9 @@ export default function CheckinData() {
         minDate={startDate}
         placeholderText="Checkout date"
       />
-      <button className="px-2 text-paleSand bg-btns py-2 shadow-lg rounded-md ml-2">Search</button>
+      <button className="px-4 text-paleSand bg-btns py-2 shadow-lg rounded-md ml-2 hover:bg-amber-100 hover:text-black">
+        Search
+      </button>
     </div>
   );
 }
-
-
