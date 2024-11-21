@@ -1,3 +1,5 @@
+import ContactForm from "../../components/ContactForm";
+
 export function Contact() {
   return (
     <div className="px-5 py-5">
@@ -33,7 +35,7 @@ export function Contact() {
         Holidaze experience smooth and enjoyable. Let's connect!
       </p>
       <div>
-        <form></form>
+        <ContactForm />
       </div>
     </div>
   );
