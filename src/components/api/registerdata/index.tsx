@@ -1,7 +1,7 @@
 import env from "../Config";
 
 interface Profile {
-  username: string;
+  name: string;
   email: string;
   password: string;
 }
@@ -10,31 +10,52 @@ const action = "/auth/register";
 const method: "POST" = "POST";
 
 export async function RegisterData(profile: Profile): Promise<string> {
-  const registerURL = env.apiBaseUrl + action;
+  // Check if the API base URL is defined
+  if (!env.apiBaseUrl) {
+    throw new Error(
+      "API base URL is not defined. Check your environment variables."
+    );
+  }
+
+  // Construct the register URL
+  const registerURL = new URL(action, env.apiBaseUrl).toString();
   console.log("Register URL:", registerURL);
 
   try {
+    // Log the payload for debugging purposes
+    console.log("Request payload:", profile);
+
+    // Make the API request
     const response = await fetch(registerURL, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      method,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(profile),
     });
 
-    const data = await response.json(); // Parse JSON response from the server
+    // Log response metadata
+    console.log("Response status:", response.status);
+    console.log("Response headers:", response.headers);
 
+    // Check if the response is not OK
     if (!response.ok) {
-      throw new Error(data.message || "Failed to register");
+      const errorData: { message: string } = await response.json();
+      throw new Error(errorData.message || "Failed to register");
     }
 
-    // Assuming the access token is returned in the data object under the key 'accessToken'
-    console.log("Registration successful, access token:", data.accessToken);
-    return data.accessToken; // You might want to handle or store the access token here
+    // Log success and return the access token
   } catch (error) {
-    console.error("Registration error:", error);
-    throw error; // Re-throw the error to be handled by the caller
+    if (error instanceof Error) {
+      console.error("Error object:", error);
+      console.error("Registration error:", error.message);
+      throw new Error(`Registration failed: ${error.message}`);
+    } else {
+      console.error("Unexpected registration error:", error);
+      throw new Error("An unknown error occurred during registration.");
+    }
   }
+
+  // Fallback (this ensures all paths are accounted for, even unreachable ones)
+  throw new Error("Unexpected end of function execution.");
 }
 
 export default RegisterData;
