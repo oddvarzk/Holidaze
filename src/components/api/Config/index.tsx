@@ -1,17 +1,23 @@
 interface EnvVars {
   apiBaseUrl: string;
   apiKey: string;
-  accessToken: string;
 }
 
 function getEnvironmentVariables(): EnvVars {
+  const { VITE_API_BASE_URL, VITE_API_KEY } = import.meta.env;
+
+  if (!VITE_API_BASE_URL || !VITE_API_KEY) {
+    throw new Error(
+      "One or more environment variables are missing. Please check your .env file."
+    );
+  }
+
   return {
-    apiBaseUrl: process.env.REACT_APP_API_BASE_URL || "",
-    apiKey: process.env.REACT_APP_API_KEY || "",
-    accessToken: process.env.REACT_APP_ACCESS_TOKEN || "",
+    apiBaseUrl: VITE_API_BASE_URL,
+    apiKey: VITE_API_KEY,
   };
 }
 
-export const env = getEnvironmentVariables();
+export const env: EnvVars = getEnvironmentVariables();
 
 export default env;
