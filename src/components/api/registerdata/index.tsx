@@ -1,3 +1,5 @@
+// src/components/api/registerData/index.tsx
+
 import env from "../Config";
 
 interface Profile {
@@ -9,53 +11,54 @@ interface Profile {
 const action = "/auth/register";
 const method: "POST" = "POST";
 
-export async function RegisterData(profile: Profile): Promise<string> {
-  // Check if the API base URL is defined
+export async function RegisterData(profile: Profile): Promise<void> {
   if (!env.apiBaseUrl) {
     throw new Error(
       "API base URL is not defined. Check your environment variables."
     );
   }
 
-  // Construct the register URL
   const registerURL = new URL(action, env.apiBaseUrl).toString();
   console.log("Register URL:", registerURL);
 
   try {
-    // Log the payload for debugging purposes
     console.log("Request payload:", profile);
 
-    // Make the API request
     const response = await fetch(registerURL, {
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(profile),
     });
 
-    // Log response metadata
     console.log("Response status:", response.status);
-    console.log("Response headers:", response.headers);
 
-    // Check if the response is not OK
     if (!response.ok) {
-      const errorData: { message: string } = await response.json();
-      throw new Error(errorData.message || "Failed to register");
+      // Attempt to parse the error message from the response body
+      let errorMessage = "Failed to register.";
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+        console.error("Error response:", errorData);
+      } catch (parseError) {
+        console.error("Error parsing error response:", parseError);
+      }
+      throw new Error(errorMessage);
     }
 
-    // Log success and return the access token
+    // Do not attempt to parse the response body if it's empty
+    // If you expect data in the response body, you can handle it here
+    // const data = await response.json(); // Only if response has content
+
+    console.log("Registration successful");
   } catch (error) {
+    console.error("Error during registration process:", error);
+    // Re-throw the error to be caught in handleSubmit
     if (error instanceof Error) {
-      console.error("Error object:", error);
-      console.error("Registration error:", error.message);
-      throw new Error(`Registration failed: ${error.message}`);
+      throw error;
     } else {
-      console.error("Unexpected registration error:", error);
       throw new Error("An unknown error occurred during registration.");
     }
   }
-
-  // Fallback (this ensures all paths are accounted for, even unreachable ones)
-  throw new Error("Unexpected end of function execution.");
 }
 
 export default RegisterData;
