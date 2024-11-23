@@ -90,11 +90,11 @@ export function LoginForm() {
             minLength={8}
             required
           />
-          <div className="px-2">
+          <div className="flex justify-center">
             <button
               type="submit"
               disabled={loading}
-              className="bg-btns hover:bg-amber-100 hover:text-charcoal text-white font-normal font-Montserrat text-sm py-2 px-4 w-32 rounded"
+              className="bg-btns w-full hover:bg-amber-100 hover:text-charcoal text-white font-normal font-Montserrat text-sm py-2 rounded"
             >
               {loading ? "Logging in..." : "Login"}
             </button>
