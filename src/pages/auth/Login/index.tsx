@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { LoginData } from "../../../components/api/loginData"; // Corrected import path
+import { LoginData } from "../../../components/api/loginData";
+import { save } from "../../../components/storage"; // Adjust the import path
+
+interface Credentials {
+  email: string;
+  password: string;
+}
 
 export function LoginForm() {
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<Credentials>({
     email: "",
     password: "",
   });
@@ -19,24 +25,31 @@ export function LoginForm() {
     setLoading(true);
     setMessage("");
     try {
-      const accessToken = await LoginData(profile);
+      const { accessToken, user } = await LoginData(profile);
       setMessage("Login successful!");
 
-      // Example: Save the access token in local storage or handle it somehow
-      localStorage.setItem("accessToken", accessToken);
+      // Use your custom save function to store the accessToken and user info
+      save("accessToken", accessToken);
+      save("user", user);
 
-      // Optionally redirect the user or perform other actions
-      // e.g., navigate to a dashboard or another page
-      // This could be using window.location or your routing library
+      // Redirect the user to the profile page
       window.location.href = "/profile";
     } catch (error) {
-      setMessage(`Login failed: ${(error as Error).message}`);
+      setLoading(false);
+      console.error("Login error:", error);
+
+      if (error instanceof Error) {
+        setMessage(`Login failed: ${error.message}`);
+      } else {
+        setMessage("Login failed: An unknown error occurred.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    // Your existing JSX code remains unchanged
     <div className="bg-tiner min-h-screen">
       <form className="py-5 container mx-auto" onSubmit={handleSubmit}>
         <div>
@@ -63,7 +76,7 @@ export function LoginForm() {
             value={profile.email}
             onChange={handleChange}
             className="block p-2 m-2 w-full rounded"
-            pattern="^[\w\-.]+@(stud\.)?noroff\.no$"
+            pattern="^[\\w\\-.]+@(stud\\.)?noroff\\.no$"
             required
           />
           <p className="text-paleSand px-2">Password</p>
@@ -83,9 +96,11 @@ export function LoginForm() {
               disabled={loading}
               className="bg-btns hover:bg-amber-100 hover:text-charcoal text-white font-normal font-Montserrat text-sm py-2 px-4 w-32 rounded"
             >
-              {loading ? "Creating your profile..." : "Register"}
+              {loading ? "Logging in..." : "Login"}
             </button>
-            {message && <p className="text-center text-paleSand">{message}</p>}
+            {message && (
+              <p className="text-center text-paleSand mt-2">{message}</p>
+            )}
           </div>
         </div>
         <div className="w-full md:w-[60vh] px-4 lg:px-0 flex flex-col justify-center mx-auto mt-8">
