@@ -1,60 +1,99 @@
 import env from "../Config";
 
-interface Profile {
+interface Credentials {
   email: string;
   password: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+  avatar: {
+    url: string;
+    alt: string;
+  };
+  banner: {
+    url: string;
+    alt: string;
+  };
+  // Include other user fields as necessary
+}
+
+interface LoginResponse {
+  data: {
+    name: string;
+    email: string;
+    avatar: {
+      url: string;
+      alt: string;
+    };
+    banner: {
+      url: string;
+      alt: string;
+    };
+    accessToken: string;
+    // Include other user fields as necessary
+  };
+  meta: any;
 }
 
 const action = "/auth/login";
 const method: "POST" = "POST";
 
-export async function LoginData(profile: Profile): Promise<string> {
-  // Check if the API base URL is defined
+export async function LoginData(
+  credentials: Credentials
+): Promise<{ accessToken: string; user: User }> {
   if (!env.apiBaseUrl) {
     throw new Error(
       "API base URL is not defined. Check your environment variables."
     );
   }
 
-  // Construct the register URL
   const loginURL = new URL(action, env.apiBaseUrl).toString();
-  console.log("Login:", loginURL);
+  console.log("Login URL:", loginURL);
 
   try {
-    // Log the payload for debugging purposes
-    console.log("Request payload:", profile);
+    console.log("Request payload:", credentials);
 
-    // Make the API request
     const response = await fetch(loginURL, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(profile),
+      body: JSON.stringify(credentials),
     });
 
-    // Log response metadata
     console.log("Response status:", response.status);
-    console.log("Response headers:", response.headers);
 
-    // Check if the response is not OK
     if (!response.ok) {
-      const errorData: { message: string } = await response.json();
-      throw new Error(errorData.message || "Failed to login");
+      // Attempt to parse the error message from the response body
+      let errorMessage = "Failed to login.";
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+        console.error("Error response:", errorData);
+      } catch (parseError) {
+        console.error("Error parsing error response:", parseError);
+      }
+      throw new Error(errorMessage);
     }
 
-    // Log success and return the access token
+    // Parse the response body to get the access token and user info
+    const responseData: LoginResponse = await response.json();
+    console.log("Login successful", responseData);
+
+    // Extract the accessToken and user data from responseData.data
+    const { accessToken, ...user } = responseData.data;
+
+    // Return the accessToken and user
+    return { accessToken, user };
   } catch (error) {
+    console.error("Error during login process:", error);
+    // Re-throw the error to be caught in handleSubmit
     if (error instanceof Error) {
-      console.error("Error object:", error);
-      console.error("Login error:", error.message);
-      throw new Error(`Login failed: ${error.message}`);
+      throw error;
     } else {
-      console.error("Unexpected login error:", error);
       throw new Error("An unknown error occurred during login.");
     }
   }
-
-  // Fallback (this ensures all paths are accounted for, even unreachable ones)
-  throw new Error("Unexpected end of function execution.");
 }
 
 export default LoginData;
