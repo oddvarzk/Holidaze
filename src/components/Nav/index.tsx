@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MotionConfig, motion } from "framer-motion";
+import { load, remove } from "../../components/storage"; // Adjust the import path
+import profileIcon from "../../assets/profileIcon.svg";
 
 export function Nav() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const accessToken = load("accessToken");
+    setIsAuthenticated(!!accessToken);
+  }, []);
 
   return (
     <nav className="text-amber-100">
@@ -52,35 +60,71 @@ export function Nav() {
           isOpen ? "flex mt-10" : "hidden mt-4"
         } md:mt-0`}
       >
-        <li className="hover:underline">
+        <li className="hover:underline mt-2">
           <Link to="/createVenue" onClick={() => setIsOpen(false)}>
             List your venue
           </Link>
         </li>
-        <li className="hover:underline">
+        <li className="hover:underline mt-2">
           <Link to="/about" onClick={() => setIsOpen(false)}>
             About us
           </Link>
         </li>
-        <li className="hover:underline">
+        <li className="hover:underline mt-2">
           <Link to="/booking" onClick={() => setIsOpen(false)}>
             Booking
           </Link>
         </li>
-        <li>
-          <Link
-            to="/login"
-            onClick={() => setIsOpen(false)}
-            className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
-          >
-            Login
-          </Link>
-        </li>
-        <li className="hover:underline">
-          <Link to="/register" onClick={() => setIsOpen(false)}>
-            Register
-          </Link>
-        </li>
+
+        {isAuthenticated ? (
+          // When user is logged in
+          <>
+            <li className="hover:underline mt-1">
+              <Link to="/profile" onClick={() => setIsOpen(false)}>
+                {/* Profile Icon */}
+                <img
+                  src={profileIcon} // Replace with actual path or use a default icon
+                  alt="Profile"
+                  className="h-8 w-8 rounded-full bg-btns "
+                />
+              </Link>
+            </li>
+            <li className="hover:underline">
+              <button
+                onClick={() => {
+                  // Logout functionality
+                  remove("accessToken");
+                  remove("user");
+                  setIsAuthenticated(false);
+                  setIsOpen(false);
+                  // Optionally, redirect to the home page
+                  window.location.href = "/";
+                }}
+                className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
+              >
+                Logout
+              </button>
+            </li>
+          </>
+        ) : (
+          // When user is not logged in
+          <>
+            <li className="mt-2">
+              <Link
+                to="/login"
+                onClick={() => setIsOpen(false)}
+                className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
+              >
+                Login
+              </Link>
+            </li>
+            <li className="hover:underline mt-2">
+              <Link to="/register" onClick={() => setIsOpen(false)}>
+                Register
+              </Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
