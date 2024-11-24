@@ -1,58 +1,75 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { MotionConfig, motion } from "framer-motion";
-import { load, remove } from "../../components/storage"; // Adjust the import path
+import { remove } from "../../components/storage";
 import profileIcon from "../../assets/profileIcon.svg";
+import searchIcon from "../../assets/searchIcon.svg";
 
-export function Nav() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+interface NavProps {
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  useEffect(() => {
-    const accessToken = load("accessToken");
-    setIsAuthenticated(!!accessToken);
-  }, []);
+export function Nav({
+  isAuthenticated,
+  setIsAuthenticated,
+  setShowSearch,
+}: NavProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <nav className="text-amber-100">
-      {/* Animated Hamburger Button */}
-      <MotionConfig
-        transition={{
-          duration: 0.5,
-          ease: "easeInOut",
+      {/* Search Icon for small screens */}
+      <button
+        onClick={() => {
+          setShowSearch((prev) => !prev);
         }}
+        className="absolute top-14 mt-4 right-24 md:hidden"
       >
-        <motion.button
-          initial={false}
-          animate={isOpen ? "open" : "closed"}
-          onClick={() => setIsOpen((prev) => !prev)}
-          className="absolute top-14 right-5 h-14 w-14 rounded-full bg-white/0 transition-colors hover:bg-white/20 md:hidden"
+        <img className="h-7" src={searchIcon} alt="Search Icon" />
+      </button>
+
+      {/* Hamburger Menu for small screens */}
+      <div className="absolute top-14 right-5 md:hidden">
+        <MotionConfig
+          transition={{
+            duration: 0.5,
+            ease: "easeInOut",
+          }}
         >
-          {/* Top Bar */}
-          <motion.span
-            variants={VARIANTS.top}
-            className="absolute h-1 w-7 bg-amber-100"
-            style={{ y: "-50%", left: "50%", x: "-50%", top: "30%" }}
-          />
-          {/* Middle Bar */}
-          <motion.span
-            variants={VARIANTS.middle}
-            className="absolute h-1 w-7 bg-amber-100"
-            style={{ left: "50%", x: "-50%", top: "50%", y: "-50%" }}
-          />
-          {/* Bottom Bar */}
-          <motion.span
-            variants={VARIANTS.bottom}
-            className="absolute h-1 w-2 bg-amber-100"
-            style={{
-              x: "-50%",
-              y: "50%",
-              bottom: "30%",
-              left: "calc(50% + 6px)",
-            }}
-          />
-        </motion.button>
-      </MotionConfig>
+          <motion.button
+            initial={false}
+            animate={isOpen ? "open" : "closed"}
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="h-14 w-14 rounded-full bg-white/0 transition-colors hover:bg-white/20"
+          >
+            {/* Top Bar */}
+            <motion.span
+              variants={VARIANTS.top}
+              className="absolute h-1 w-7 bg-amber-100"
+              style={{ y: "-50%", left: "50%", x: "-50%", top: "30%" }}
+            />
+            {/* Middle Bar */}
+            <motion.span
+              variants={VARIANTS.middle}
+              className="absolute h-1 w-7 bg-amber-100"
+              style={{ left: "50%", x: "-50%", top: "50%", y: "-50%" }}
+            />
+            {/* Bottom Bar */}
+            <motion.span
+              variants={VARIANTS.bottom}
+              className="absolute h-1 w-2 bg-amber-100"
+              style={{
+                x: "-50%",
+                y: "50%",
+                bottom: "30%",
+                left: "calc(50% + 6px)",
+              }}
+            />
+          </motion.button>
+        </MotionConfig>
+      </div>
 
       {/* Navigation Links */}
       <ul
@@ -83,7 +100,7 @@ export function Nav() {
               <Link to="/profile" onClick={() => setIsOpen(false)}>
                 {/* Profile Icon */}
                 <img
-                  src={profileIcon} // Replace with actual path or use a default icon
+                  src={profileIcon}
                   alt="Profile"
                   className="h-8 w-8 rounded-full bg-btns py-1"
                 />
@@ -97,7 +114,7 @@ export function Nav() {
                   remove("user");
                   setIsAuthenticated(false);
                   setIsOpen(false);
-                  // Optionally, redirect to the home page
+                  // Redirect to the home page
                   window.location.href = "/";
                 }}
                 className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
@@ -125,6 +142,17 @@ export function Nav() {
             </li>
           </>
         )}
+
+        {/* Search Icon for larger screens */}
+        <li className="mt-1 hidden md:block">
+          <button
+            onClick={() => {
+              setShowSearch((prev) => !prev);
+            }}
+          >
+            <img className="h-7" src={searchIcon} alt="Search Icon" />
+          </button>
+        </li>
       </ul>
     </nav>
   );
