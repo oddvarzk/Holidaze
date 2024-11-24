@@ -26,7 +26,7 @@ export function Nav() {
           initial={false}
           animate={isOpen ? "open" : "closed"}
           onClick={() => setIsOpen((prev) => !prev)}
-          className="absolute top-12 right-5 h-14 w-14 rounded-full bg-white/0 transition-colors hover:bg-white/20 md:hidden"
+          className="absolute top-14 right-5 h-14 w-14 rounded-full bg-white/0 transition-colors hover:bg-white/20 md:hidden"
         >
           {/* Top Bar */}
           <motion.span
@@ -71,8 +71,8 @@ export function Nav() {
           </Link>
         </li>
         <li className="hover:underline mt-2">
-          <Link to="/booking" onClick={() => setIsOpen(false)}>
-            Booking
+          <Link to="/venues" onClick={() => setIsOpen(false)}>
+            Venues
           </Link>
         </li>
 
@@ -85,7 +85,7 @@ export function Nav() {
                 <img
                   src={profileIcon} // Replace with actual path or use a default icon
                   alt="Profile"
-                  className="h-8 w-8 rounded-full bg-btns "
+                  className="h-8 w-8 rounded-full bg-btns py-1"
                 />
               </Link>
             </li>
