@@ -49,7 +49,6 @@ export function LoginForm() {
   };
 
   return (
-    // Your existing JSX code remains unchanged
     <div className="bg-tiner min-h-screen">
       <form className="py-5 container mx-auto" onSubmit={handleSubmit}>
         <div>
@@ -90,11 +89,12 @@ export function LoginForm() {
             minLength={8}
             required
           />
-          <div className="flex justify-center">
+          {/* Updated Button Container */}
+          <div className="w-full">
             <button
               type="submit"
               disabled={loading}
-              className="bg-btns w-full hover:bg-amber-100 hover:text-charcoal text-white font-normal font-Montserrat text-sm py-2 rounded"
+              className="bg-btns w-full hover:bg-amber-100 hover:text-charcoal text-white font-normal font-Montserrat text-sm py-2 m-2 rounded"
             >
               {loading ? "Logging in..." : "Login"}
             </button>
