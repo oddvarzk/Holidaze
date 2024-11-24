@@ -11,7 +11,7 @@ export const VenueList: React.FC = () => {
   const [error, setError] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 18;
 
   useEffect(() => {
     const fetchVenues = async () => {
