@@ -57,7 +57,7 @@ export interface SingleVenueResponse {
 // Function to retrieve all venues with pagination
 export const getAllVenues = async (
   page: number = 1,
-  limit: number = 20
+  limit: number = 25
 ): Promise<VenuesResponse> => {
   const response = await fetch(
     `${BASE_URL}/holidaze/venues?page=${page}&limit=${limit}`,
