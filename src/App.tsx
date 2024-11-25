@@ -7,6 +7,7 @@ import LoginForm from "./pages/auth/Login";
 import MyProfile from "./pages/user/myProfile";
 import VenueList from "./pages/venues";
 import About from "./pages/about";
+import CreateVenue from "./pages/venues/createVenue";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="profile" element={<MyProfile />} />
           <Route path="venues" element={<VenueList />} />
           <Route path="about" element={<About />} />
+          <Route path="createVenue" element={<CreateVenue />} />
         </Route>
       </Routes>
     </div>
