@@ -20,7 +20,8 @@ export function RegisterForm() {
     setLoading(true);
     setMessage("");
     try {
-      await RegisterData(profile); // Call RegisterData without expecting a return value
+      // Since RegisterData expects Profile without venueManager, no need to include it here
+      await RegisterData(profile); // Call RegisterData with name, email, password
       setMessage("Registration successful!");
       setTimeout(() => (window.location.href = "/login"), 2000); // Redirect to login after success
     } catch (error) {
