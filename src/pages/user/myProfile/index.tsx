@@ -1,23 +1,32 @@
+// components/MyProfile.tsx
+
 import { useEffect, useState } from "react";
-import { load } from "../../../components/storage";
+import { load, save } from "../../../components/storage";
+import { editProfile } from "../../../components/api/user/editProfile"; // Import the API function
 import createIcon from "../../../assets/createIcon.svg";
+import example from "../../../assets/example.png"; // Ensure this import exists
 
 interface User {
   name: string;
   email: string;
-  avatar: {
+  bio?: string;
+  avatar?: {
     url: string;
     alt: string;
   };
-  banner: {
+  banner?: {
     url: string;
     alt: string;
   };
-  vennueManager: boolean;
+  venueManager?: boolean;
 }
 
 export function MyProfile() {
   const [user, setUser] = useState<User | null>(null);
+  const [newAvatarUrl, setNewAvatarUrl] = useState<string>("");
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [updateError, setUpdateError] = useState<string>("");
+  const [updateSuccess, setUpdateSuccess] = useState<string>("");
 
   useEffect(() => {
     const userData = load("user");
@@ -29,6 +38,53 @@ export function MyProfile() {
     }
   }, []);
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewAvatarUrl(e.target.value);
+  };
+
+  const handleAvatarUpdate = async () => {
+    if (!user) return;
+
+    // Basic URL validation
+    try {
+      new URL(newAvatarUrl);
+    } catch (_) {
+      setUpdateError("Please enter a valid URL.");
+      return;
+    }
+
+    setIsUpdating(true);
+    setUpdateError("");
+    setUpdateSuccess("");
+
+    try {
+      const response = await editProfile(user.name, {
+        avatar: {
+          url: newAvatarUrl,
+          alt: `${user.name}'s avatar`,
+        },
+      });
+
+      // Update user data in state and local storage
+      const updatedUser: User = {
+        ...user,
+        avatar: response.data.avatar,
+      };
+      setUser(updatedUser);
+      save("user", updatedUser);
+
+      // Set success message
+      setUpdateSuccess("Avatar updated successfully!");
+
+      // Clear the input field
+      setNewAvatarUrl("");
+    } catch (error: any) {
+      setUpdateError(error.message || "Failed to update avatar.");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   if (!user) {
     return <p>Loading user data...</p>;
   }
@@ -37,23 +93,46 @@ export function MyProfile() {
     <div className="container max-w-full mx-auto py-5">
       <div>
         <div>
-          {user.avatar && (
-            <div className="flex flex-col justify-center text-center">
-              <div className="flex justify-center">
-                <img
-                  className="rounded-full h-32"
-                  src={user.avatar.url}
-                  alt={user.avatar.alt}
-                />
-              </div>
-              <div className="mb-5">
-                <p className="text-btns font-Montserrat mt-1">
-                  Edit profile picture
-                </p>
-              </div>
+          <div className="flex flex-col justify-center text-center">
+            <div className="flex justify-center">
+              <img
+                className="rounded-full h-32 w-32 object-cover"
+                src={user.avatar?.url || example}
+                alt={user.avatar?.alt || "Profile Avatar"}
+              />
             </div>
-          )}
+            <div className="mb-5">
+              {/* Avatar Update Form */}
+              <div className="flex flex-col items-center mt-4">
+                <input
+                  type="text"
+                  placeholder="Enter new avatar URL"
+                  value={newAvatarUrl}
+                  onChange={handleAvatarChange}
+                  className="border border-gray-300 rounded p-2 w-64"
+                  disabled={isUpdating}
+                />
+                <button
+                  onClick={handleAvatarUpdate}
+                  disabled={isUpdating || !newAvatarUrl}
+                  className="mt-2 bg-btns text-white px-4 py-2 rounded hover:bg-amber-100 hover:text-black disabled:opacity-50"
+                >
+                  {isUpdating ? "Updating..." : "Update Avatar"}
+                </button>
+                {updateError && (
+                  <p className="text-red-500 mt-2">{updateError}</p>
+                )}
+                {updateSuccess && (
+                  <p className="text-green-500 mt-2">{updateSuccess}</p>
+                )}
+              </div>
+              <p className="font-Montserrat font-semibold py-2">
+                Bio: <span className="font-light">{user.bio || "No bio"}</span>
+              </p>
+            </div>
+          </div>
         </div>
+        {/* Rest of your component */}
         <div>
           <div className="mx-auto mb-10 w-fit md:max-w-full">
             <h1 className="font-Playfair text-2xl py-5 text-tiner font-medium">
@@ -71,35 +150,38 @@ export function MyProfile() {
                     {user.email}
                   </p>
                   <p className="font-light mb-3">
-                    <span className="font-semibold">Venue Manager: </span>
-                    {user.vennueManager}
+                    <span className="font-semibold">Bio: </span>
+                    {user.bio || "No bio"}
                   </p>
                   <p className="font-light mb-3">
-                    <span className="font-semibold">Active venues: </span>
-                    {user.vennueManager}
+                    <span className="font-semibold">Venue Manager: </span>
+                    {user.venueManager ? "Yes" : "No"}
                   </p>
+                  {/* Add more user info as needed */}
                 </div>
               </div>
               <div className="px-5 mb-3 items-center flex flex-col font-Montserrat">
-                <h1 className="py-5">Switch account to venue manager?</h1>
+                <h1 className="py-5">Register account as venue manager?</h1>
                 <button className="bg-btns py-2 px-5 hover:bg-amber-100 hover:text-charcoal">
                   Become venue manager
                 </button>
               </div>
             </div>
           </div>
+          {/* Active Listings Section */}
           <div className="px-5 w-fit mx-auto mb-10">
             <div className="flex flex-row gap-5">
               <h1 className="font-Playfair text-2xl text-tiner font-medium">
                 Active listings
               </h1>
               <div className="flex mt-1">
-                <img className="h-7" src={createIcon}></img>
+                <img className="h-7" src={createIcon} alt="Create Icon" />
                 <p className="px-1 font-Montserrat mt-1 text-sm text-btns">
                   Create listing
                 </p>
               </div>
             </div>
+            {/* Add listings here */}
           </div>
         </div>
       </div>
