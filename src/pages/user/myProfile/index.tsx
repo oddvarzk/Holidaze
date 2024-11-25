@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { load, save } from "../../../components/storage";
 import { editProfile } from "../../../components/api/user/editProfile"; // Import the corrected API function
 import createIcon from "../../../assets/createIcon.svg";
-import example from "../../../assets/example.png"; // Ensure this import exists
 
 interface Avatar {
   url: string;
