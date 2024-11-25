@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
-import CheckinData from "../../components/CheckinData";
+import CheckinData from "../../components/BookingSearch";
 import planeIcon from "../../assets/plane.svg";
 import palmTreeIcon from "../../assets/palmTree.svg";
 import mapIcon from "../../assets/mapIcon.svg";
@@ -16,8 +16,8 @@ export function Home() {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await getAllVenues();
-        setVenues(response.data);
+        const venuesData = await getAllVenues();
+        setVenues(venuesData); // Set the venues directly
       } catch (err) {
         setError("Failed to fetch venues.");
         console.error(err);
@@ -82,7 +82,7 @@ export function Home() {
           <p>{error}</p>
         ) : (
           <div className="flex flex-wrap justify-center py-5 gap-10">
-            {venues.slice(0, 4).map((venue) => (
+            {venues.slice(0, 6).map((venue) => (
               <div
                 key={venue.id}
                 className="shadow-lg transition-transform duration-300 transform hover:scale-105"
