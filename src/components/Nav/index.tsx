@@ -117,7 +117,7 @@ export function Nav({
                   // Redirect to the home page
                   window.location.href = "/";
                 }}
-                className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
+                className="text-amber-100 font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
               >
                 Logout
               </button>
@@ -130,7 +130,7 @@ export function Nav({
               <Link
                 to="/login"
                 onClick={() => setIsOpen(false)}
-                className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
+                className="text-amber-100 font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
               >
                 Login
               </Link>
