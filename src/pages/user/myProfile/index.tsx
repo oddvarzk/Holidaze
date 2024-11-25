@@ -153,7 +153,7 @@ export function MyProfile() {
             <div className="flex justify-center">
               <img
                 className="rounded-full h-32 w-32 object-cover"
-                src={user.avatar?.url || example}
+                src={user.avatar?.url}
                 alt={user.avatar?.alt || "Profile Avatar"}
               />
             </div>
