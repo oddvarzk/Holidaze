@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Nav from "../Nav";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { load } from "../../components/storage";
 
 export function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showSearch, setShowSearch] = useState(false); // State for search form visibility
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const accessToken = load("accessToken");
@@ -15,9 +17,8 @@ export function Header() {
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Implement your search logic here
-    window.location.href = `/search?query=${encodeURIComponent(searchQuery)}`;
-    // Optionally, close the search form
+    // Redirect to /venues with the search query
+    navigate(`/venues?query=${encodeURIComponent(searchQuery)}`);
     setShowSearch(false);
   };
 
