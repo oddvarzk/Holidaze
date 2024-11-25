@@ -1,3 +1,5 @@
+// src/components/api/loginData.tsx
+
 import env from "../Config";
 
 interface Credentials {
@@ -5,17 +7,22 @@ interface Credentials {
   password: string;
 }
 
+interface Avatar {
+  url: string;
+  alt: string;
+}
+
+interface Banner {
+  url: string;
+  alt: string;
+}
+
 interface User {
   name: string;
   email: string;
-  avatar: {
-    url: string;
-    alt: string;
-  };
-  banner: {
-    url: string;
-    alt: string;
-  };
+  avatar: Avatar;
+  banner: Banner;
+  venueManager: boolean; // Included venueManager property
   // Include other user fields as necessary
 }
 
@@ -23,15 +30,10 @@ interface LoginResponse {
   data: {
     name: string;
     email: string;
-    avatar: {
-      url: string;
-      alt: string;
-    };
-    banner: {
-      url: string;
-      alt: string;
-    };
+    avatar: Avatar;
+    banner: Banner;
     accessToken: string;
+    venueManager: boolean; // Ensure venueManager is included in the response
     // Include other user fields as necessary
   };
   meta: any;
@@ -49,13 +51,16 @@ export async function LoginData(
     );
   }
 
-  const loginURL = new URL(action, env.apiBaseUrl).toString();
-  console.log("Login URL:", loginURL);
+  // Include the _holidaze=true query parameter
+  const loginURL = new URL(action, env.apiBaseUrl);
+  loginURL.searchParams.append("_holidaze", "true"); // Adds ?_holidaze=true to the URL
+
+  console.log("Login URL with query params:", loginURL.toString());
 
   try {
     console.log("Request payload:", credentials);
 
-    const response = await fetch(loginURL, {
+    const response = await fetch(loginURL.toString(), {
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
@@ -81,7 +86,15 @@ export async function LoginData(
     console.log("Login successful", responseData);
 
     // Extract the accessToken and user data from responseData.data
-    const { accessToken, ...user } = responseData.data;
+    const { accessToken, venueManager, ...userData } = responseData.data;
+
+    // Ensure venueManager is included in the user object
+    const user: User = {
+      ...userData,
+      venueManager, // Include the venueManager property
+    };
+
+    console.log("User object to be saved:", user);
 
     // Return the accessToken and user
     return { accessToken, user };
