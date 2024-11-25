@@ -54,27 +54,36 @@ export interface SingleVenueResponse {
   meta: object;
 }
 
-// Function to retrieve all venues with pagination
-export const getAllVenues = async (
-  page: number = 1,
-  limit: number = 25
-): Promise<VenuesResponse> => {
-  const response = await fetch(
-    `${BASE_URL}/holidaze/venues?page=${page}&limit=${limit}`,
-    {
+// Function to retrieve all venues by fetching all pages
+export const getAllVenues = async (): Promise<Venue[]> => {
+  let allVenues: Venue[] = [];
+  let page = 1;
+  let totalPages = 1;
+  const limit = 50; // Adjust the limit based on your API's max limit
+
+  do {
+    const url = `${BASE_URL}/holidaze/venues?page=${page}&limit=${limit}`;
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching venues: ${response.statusText}`);
     }
-  );
 
-  if (!response.ok) {
-    throw new Error(`Error fetching venues: ${response.statusText}`);
-  }
+    const data: VenuesResponse = await response.json();
 
-  const data: VenuesResponse = await response.json();
-  return data;
+    allVenues = allVenues.concat(data.data);
+
+    totalPages = data.meta.pageCount;
+    page += 1;
+  } while (page <= totalPages);
+
+  return allVenues;
 };
 
 // Function to retrieve a single venue by ID
