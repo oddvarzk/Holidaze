@@ -10,6 +10,7 @@ import About from "./pages/about";
 import { AuthProvider } from "./components/context/authContext.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateVenuePage from "./components/CreateVenuePage/index.tsx";
+import UpdateVenuePage from "./pages/venues/updateVenue/index.tsx";
 
 function App() {
   return (
@@ -29,6 +30,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CreateVenuePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="updateVenue/:id"
+              element={
+                <ProtectedRoute>
+                  <UpdateVenuePage />
                 </ProtectedRoute>
               }
             />
