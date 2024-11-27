@@ -4,6 +4,11 @@ import React, { useEffect, useState } from "react";
 import { load, save } from "../../../components/storage";
 import { editProfile } from "../../../components/api/user/editProfile"; // Import the corrected API function
 import createIcon from "../../../assets/createIcon.svg";
+import { Link } from "react-router-dom";
+import getActiveListings, {
+  Venue,
+} from "../../../components/api/user/activeListings"; // Import the new API function
+import deleteVenue from "../../../components/api/user/deleteVenue";
 
 interface Avatar {
   url: string;
@@ -29,6 +34,9 @@ export function MyProfile() {
   const [newAvatarUrl, setNewAvatarUrl] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
+  const [activeListings, setActiveListings] = useState<Venue[]>([]);
+  const [listingsError, setListingsError] = useState<string | null>(null);
+
   const [updateSuccess, setUpdateSuccess] = useState<string>("");
   const [isBecomingVenueManager, setIsBecomingVenueManager] =
     useState<boolean>(false);
@@ -37,6 +45,15 @@ export function MyProfile() {
     const userData = load("user");
     if (userData) {
       setUser(userData);
+
+      // Fetch active listings for the profile
+      getActiveListings(userData.name)
+        .then((listings) => {
+          setActiveListings(listings);
+        })
+        .catch((error) => {
+          setListingsError(error.message || "Failed to fetch listings.");
+        });
     } else {
       // Redirect to login if user data is not available
       window.location.href = "/login";
@@ -137,6 +154,20 @@ export function MyProfile() {
       setUpdateError(error.message || "Failed to update role.");
     } finally {
       setIsBecomingVenueManager(false);
+    }
+  };
+  const handleDeleteVenue = async (venueId: string) => {
+    if (window.confirm("Are you sure you want to delete this venue?")) {
+      try {
+        await deleteVenue(venueId);
+        setActiveListings((prevListings) =>
+          prevListings.filter((listing) => listing.id !== venueId)
+        );
+        console.log("Venue deleted successfully");
+      } catch (error: any) {
+        console.error("Failed to delete venue:", error);
+        setListingsError(error.message || "Failed to delete venue.");
+      }
     }
   };
 
@@ -249,14 +280,74 @@ export function MyProfile() {
               <h1 className="font-Playfair text-2xl text-tiner font-medium">
                 Active listings
               </h1>
-              <div className="flex mt-1">
-                <img className="h-7" src={createIcon} alt="Create Icon" />
-                <p className="px-1 font-Montserrat mt-1 text-sm text-btns">
-                  Create listing
-                </p>
-              </div>
+              <Link to="/createVenue">
+                <div className="flex mt-1 cursor-pointer">
+                  <img className="h-7" src={createIcon} alt="Create Icon" />
+                  <p className="px-1 font-Montserrat mt-1 text-sm text-btns">
+                    Create listing
+                  </p>
+                </div>
+              </Link>
             </div>
-            {/* Add listings here */}
+
+            {/* Display Listings */}
+            {listingsError ? (
+              <p className="text-red-500 mt-5">{listingsError}</p>
+            ) : (
+              <div className="mt-5 space-y-4">
+                {activeListings.length === 0 ? (
+                  <p className="text-gray-500">No active listings found.</p>
+                ) : (
+                  activeListings.map((listing) => (
+                    <div
+                      key={listing.id}
+                      className="bg-white shadow-md rounded-lg p-4"
+                    >
+                      <h2 className="font-semibold text-lg text-charcoal">
+                        {listing.name}
+                      </h2>
+                      <p className="text-sm text-gray-600">
+                        {listing.description}
+                      </p>
+                      <div className="mt-2 flex gap-2">
+                        {listing.media.length > 0 && (
+                          <img
+                            src={listing.media[0].url}
+                            alt={listing.media[0].alt}
+                            className="h-32 w-32 object-cover rounded"
+                          />
+                        )}
+                        <div className="flex flex-col">
+                          <p className="font-medium text-sm">
+                            Price: {listing.price} NOK/night
+                          </p>
+                          <p className="font-medium text-sm">
+                            Max Guests: {listing.maxGuests}
+                          </p>
+                          <p className="font-medium text-sm">
+                            Rating: {listing.rating}
+                          </p>
+                        </div>
+                      </div>
+                      {/* Add Update and Delete Buttons */}
+                      <div className="flex gap-4 mt-4">
+                        <Link to={`/updateVenue/${listing.id}`}>
+                          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                            Update
+                          </button>
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteVenue(listing.id)}
+                          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
