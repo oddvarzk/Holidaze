@@ -7,23 +7,34 @@ import LoginForm from "./pages/auth/Login";
 import MyProfile from "./pages/user/myProfile";
 import VenueList from "./pages/venues";
 import About from "./pages/about";
-import CreateVenue from "./pages/venues/createVenue";
+import { AuthProvider } from "./components/context/authContext.tsx";
+import ProtectedRoute from "./components/ProtectedRoute";
+import CreateVenuePage from "./components/CreateVenuePage/index.tsx";
 
 function App() {
   return (
     <div>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="register" element={<RegisterForm />} />
-          <Route path="login" element={<LoginForm />} />
-          <Route path="profile" element={<MyProfile />} />
-          <Route path="venues" element={<VenueList />} />
-          <Route path="about" element={<About />} />
-          <Route path="createVenue" element={<CreateVenue />} />
-        </Route>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="register" element={<RegisterForm />} />
+            <Route path="login" element={<LoginForm />} />
+            <Route path="profile" element={<MyProfile />} />
+            <Route path="venues" element={<VenueList />} />
+            <Route path="about" element={<About />} />
+            <Route
+              path="createVenue"
+              element={
+                <ProtectedRoute>
+                  <CreateVenuePage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </div>
   );
 }
