@@ -1,3 +1,5 @@
+// src/pages/Home.tsx
+
 import { useEffect, useState } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
 import CheckinData from "../../components/BookingSearch";
@@ -7,6 +9,7 @@ import mapIcon from "../../assets/mapIcon.svg";
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 import { getAllVenues, Venue } from "../../components/api/fetch/venues";
+import { Link } from "react-router-dom"; // Import Link
 
 export function Home() {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -83,8 +86,9 @@ export function Home() {
         ) : (
           <div className="flex flex-wrap justify-center py-5 gap-10">
             {venues.slice(0, 6).map((venue) => (
-              <div
+              <Link
                 key={venue.id}
+                to={`/venue/${venue.id}`} // Navigate to SingleVenue page
                 className="shadow-lg transition-transform duration-300 transform hover:scale-105"
               >
                 <div>
@@ -129,7 +133,6 @@ export function Home() {
                           Breakfast included
                         </li>
                       )}
-                      {/* Add more amenities as needed */}
                       {venue.meta.parking && (
                         <li className="flex items-center text-gray-500 text-sm">
                           <span className="text-gray-400 mr-2">•</span>
@@ -151,7 +154,7 @@ export function Home() {
                     </ul>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
