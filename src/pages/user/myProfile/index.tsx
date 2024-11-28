@@ -276,8 +276,8 @@ export function MyProfile() {
           </div>
           {/* Active Listings Section */}
           <div className="px-5 w-fit mx-auto mb-10">
-            <div className="flex flex-row gap-5">
-              <h1 className="font-Playfair text-2xl text-tiner font-medium">
+            <div className="flex justify-between gap-5">
+              <h1 className="font-Playfair text-2xl text-tiner font-medium mr-5">
                 Active listings
               </h1>
               <Link to="/createVenue">
@@ -294,27 +294,37 @@ export function MyProfile() {
             {listingsError ? (
               <p className="text-red-500 mt-5">{listingsError}</p>
             ) : (
-              <div className="mt-5 space-y-4">
+              <div className="mt-5 flex flex-wrap gap-5">
                 {activeListings.length === 0 ? (
                   <p className="text-gray-500">No active listings found.</p>
                 ) : (
                   activeListings.map((listing) => (
                     <div
                       key={listing.id}
-                      className="bg-white shadow-md rounded-lg p-4"
+                      className="bg-tin px-5 text-paleSand rounded-lg py-5 font-Montserrat"
                     >
-                      <h2 className="font-semibold text-lg text-charcoal">
-                        {listing.name}
-                      </h2>
-                      <p className="text-sm text-gray-600">
-                        {listing.description}
-                      </p>
+                      <div className="flex justify-between py-2">
+                        <h2 className="font-semibold text-lg text-paleSand">
+                          {listing.name}
+                        </h2>
+                        <Link to={`/updateVenue/${listing.id}`}>
+                          <button className="bg-btns text-white px-4 py-1 rounded hover:bg-amber-100 hover:text-charcoal text-sm">
+                            Update
+                          </button>
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteVenue(listing.id)}
+                          className="bg-red-600 text-white px-4 rounded hover:bg-red-700"
+                        >
+                          <span className="px-1 text-sm">Delete</span>
+                        </button>
+                      </div>
                       <div className="mt-2 flex gap-2">
                         {listing.media.length > 0 && (
                           <img
                             src={listing.media[0].url}
                             alt={listing.media[0].alt}
-                            className="h-32 w-32 object-cover rounded"
+                            className="h-32 w-52 object-cover rounded"
                           />
                         )}
                         <div className="flex flex-col">
@@ -330,19 +340,7 @@ export function MyProfile() {
                         </div>
                       </div>
                       {/* Add Update and Delete Buttons */}
-                      <div className="flex gap-4 mt-4">
-                        <Link to={`/updateVenue/${listing.id}`}>
-                          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-                            Update
-                          </button>
-                        </Link>
-                        <button
-                          onClick={() => handleDeleteVenue(listing.id)}
-                          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-                        >
-                          Delete
-                        </button>
-                      </div>
+                      <div className="flex gap-4 mt-4"></div>
                     </div>
                   ))
                 )}
