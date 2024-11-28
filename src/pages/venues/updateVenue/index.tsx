@@ -75,7 +75,9 @@ const UpdateVenuePage: React.FC = () => {
   return (
     <div className="py-5 px-5 mt-5 max-w-4xl mx-auto">
       <div className="px-5 font-Montserrat">
-        <h1 className="text-3xl font-semibold mb-4">Update Venue</h1>
+        <h1 className="text-2xl font-semibold mb-4 text-center text-tin">
+          Update Venue
+        </h1>
       </div>
       <div className="bg-tiner rounded-2xl font-Montserrat p-6 shadow-lg">
         <h2 className="text-center text-amber-100 font-Playfair text-2xl py-2 mb-6">
