@@ -104,24 +104,3 @@ export const getVenueById = async (
   const data: SingleVenueResponse = await response.json();
   return data;
 };
-
-// Function to retrieve venues by a specific profile
-export const getVenuesByProfile = async (
-  profileId: string
-): Promise<VenuesResponse> => {
-  const response = await fetch(`${BASE_URL}/profiles/${profileId}/venues`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Error fetching venues for profile ${profileId}: ${response.statusText}`
-    );
-  }
-
-  const data: VenuesResponse = await response.json();
-  return data;
-};
