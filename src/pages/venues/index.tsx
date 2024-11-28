@@ -1,16 +1,19 @@
+// src/pages/VenueList.tsx
+
 import React, { useEffect, useState } from "react";
 import { getAllVenues, Venue } from "../../components/api/fetch/venues"; // Adjust the import path
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 
-export const VenueList: React.FC = () => {
+const VenueList: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [filteredVenues, setFilteredVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
   const location = useLocation();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Parse query parameters from URL
   const params = new URLSearchParams(location.search);
@@ -46,6 +49,10 @@ export const VenueList: React.FC = () => {
     }
   }, [venues, query]);
 
+  const handleVenueClick = (id: string) => {
+    navigate(`/venue/${id}`);
+  };
+
   return (
     <div className="bg-paleSand">
       <div className="px-5 py-5 mt-4">
@@ -62,7 +69,8 @@ export const VenueList: React.FC = () => {
               filteredVenues.map((venue) => (
                 <div
                   key={venue.id}
-                  className="shadow-lg transition-transform duration-300 transform hover:scale-105"
+                  className="shadow-lg transition-transform duration-300 transform hover:scale-105 cursor-pointer"
+                  onClick={() => handleVenueClick(venue.id)} // Handle click
                 >
                   {/* Venue card content */}
                   <div>
