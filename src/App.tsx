@@ -11,6 +11,7 @@ import { AuthProvider } from "./components/context/authContext.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import CreateVenuePage from "./components/CreateVenuePage/index.tsx";
 import UpdateVenuePage from "./pages/venues/updateVenue/index.tsx";
+import SingleVenue from "./pages/venues/singleVenue/index.tsx";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="profile" element={<MyProfile />} />
             <Route path="venues" element={<VenueList />} />
             <Route path="about" element={<About />} />
+            <Route path="/venue/:id" element={<SingleVenue />} />
             <Route
               path="createVenue"
               element={
