@@ -2,6 +2,10 @@
 
 Holidaze is a booking platform that connects users with venue managers, enabling users to find and book accommodations quickly and securely. Built with **Vite**, **React**, and **TypeScript**, this project aims to provide a smooth and efficient booking experience, with a focus on reliability and ease of use.
 
+## Website link
+
+## [![Netlify Status](https://api.netlify.com/api/v1/badges/936a595a-ed12-4d55-ba7f-8657b723f9c1/deploy-status)](https://app.netlify.com/sites/ozkholidaze/deploys)
+
 ---
 
 ## Table of Contents
@@ -45,7 +49,6 @@ Holidaze allows users to explore and book accommodations while offering venue ma
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" alt="React" width="30" height="30"/>
 </span>
 
-
 - **Vite** - Fast and modern front-end build tool
 - **React** - JavaScript library for building user interfaces
 - **TypeScript** - Superset of JavaScript for static type-checking
@@ -67,3 +70,4 @@ To get a local copy up and running, follow these steps.
 1. Clone the repository:
    ```bash
    git clone https://github.com/oddvarzk/holidaze.git
+   ```
