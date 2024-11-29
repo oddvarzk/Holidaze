@@ -1,7 +1,6 @@
-// src/components/MyProfile.tsx
+// src/pages/user/MyProfile.tsx
 
 import React, { useEffect, useState } from "react";
-import { load, save } from "../../../components/storage";
 import { editProfile } from "../../../components/api/user/editProfile"; // Import the corrected API function
 import createIcon from "../../../assets/createIcon.svg";
 import { Link } from "react-router-dom";
@@ -9,6 +8,7 @@ import getActiveListings, {
   Venue,
 } from "../../../components/api/user/activeVenues"; // Import the new API function
 import deleteVenue from "../../../components/api/venues/deleteVenue";
+import { useAuth } from "../../../components/context/authContext.tsx"; // Import the custom hook
 
 interface Avatar {
   url: string;
@@ -26,39 +26,35 @@ interface User {
   bio?: string;
   avatar?: Avatar;
   banner?: Banner;
-  venueManager: boolean; // Now required based on earlier implementation
+  venueManager: boolean;
 }
 
 export function MyProfile() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user: authUser, logout, login } = useAuth(); // Access user, logout, and login from context
+  const [user, setUser] = useState<User | null>(authUser);
   const [newAvatarUrl, setNewAvatarUrl] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
   const [activeListings, setActiveListings] = useState<Venue[]>([]);
   const [listingsError, setListingsError] = useState<string | null>(null);
-
   const [updateSuccess, setUpdateSuccess] = useState<string>("");
   const [isBecomingVenueManager, setIsBecomingVenueManager] =
     useState<boolean>(false);
 
   useEffect(() => {
-    const userData = load("user");
-    if (userData) {
-      setUser(userData);
+    if (authUser) {
+      setUser(authUser);
 
       // Fetch active listings for the profile
-      getActiveListings(userData.name)
+      getActiveListings(authUser.name)
         .then((listings) => {
           setActiveListings(listings);
         })
         .catch((error) => {
           setListingsError(error.message || "Failed to fetch listings.");
         });
-    } else {
-      // Redirect to login if user data is not available
-      window.location.href = "/login";
     }
-  }, []);
+  }, [authUser]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewAvatarUrl(e.target.value);
@@ -80,8 +76,8 @@ export function MyProfile() {
     setUpdateSuccess("");
 
     try {
-      // Retrieve the access token from localStorage
-      const accessToken = load("accessToken");
+      // Retrieve the access token from AuthContext
+      const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
         throw new Error("Access token not found. Please log in again.");
       }
@@ -93,18 +89,15 @@ export function MyProfile() {
         },
       });
 
-      // Update user data in state and local storage
+      // Update user data via AuthContext
       const updatedUser: User = {
         ...user,
         avatar: response.data.avatar,
       };
       setUser(updatedUser);
-      save("user", updatedUser);
+      login(accessToken, updatedUser); // Update context with new user data
 
-      // Set success message
       setUpdateSuccess("Avatar updated successfully!");
-
-      // Clear the input field
       setNewAvatarUrl("");
     } catch (error: any) {
       setUpdateError(error.message || "Failed to update avatar.");
@@ -127,8 +120,8 @@ export function MyProfile() {
     setUpdateSuccess("");
 
     try {
-      // Retrieve the access token from localStorage
-      const accessToken = load("accessToken");
+      // Retrieve the access token from AuthContext
+      const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
         throw new Error("Access token not found. Please log in again.");
       }
@@ -137,25 +130,22 @@ export function MyProfile() {
         venueManager: true,
       });
 
-      // Update user data in state and local storage
+      // Update user data via AuthContext
       const updatedUser: User = {
         ...user,
         venueManager: response.data.venueManager,
       };
       setUser(updatedUser);
-      save("user", updatedUser);
+      login(accessToken, updatedUser); // Update context with new user data
 
-      // Set success message
       setUpdateSuccess("You are now a Venue Manager!");
-
-      // Optionally, redirect to venue manager dashboard
-      // window.location.href = "/venue-manager-dashboard";
     } catch (error: any) {
       setUpdateError(error.message || "Failed to update role.");
     } finally {
       setIsBecomingVenueManager(false);
     }
   };
+
   const handleDeleteVenue = async (venueId: string) => {
     if (window.confirm("Are you sure you want to delete this venue?")) {
       try {
