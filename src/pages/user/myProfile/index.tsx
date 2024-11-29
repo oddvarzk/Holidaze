@@ -8,7 +8,7 @@ import getActiveListings, {
   Venue,
 } from "../../../components/api/user/activeVenues"; // Import the new API function
 import deleteVenue from "../../../components/api/venues/deleteVenue";
-import { useAuth } from "../../../components/context/authContext.tsx"; // Import the custom hook
+import { useAuth } from "../../../components/context/authContext"; // Import the custom hook
 
 interface Avatar {
   url: string;
