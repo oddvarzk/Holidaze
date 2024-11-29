@@ -1,13 +1,14 @@
+// src/components/Nav.tsx
+
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MotionConfig, motion } from "framer-motion";
-import { remove } from "../../components/storage";
 import profileIcon from "../../assets/profileIcon.svg";
 import searchIcon from "../../assets/searchIcon.svg";
 
 interface NavProps {
   isAuthenticated: boolean;
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAuthenticated: () => void; // Update the type to match logout function
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -17,6 +18,13 @@ export function Nav({
   setShowSearch,
 }: NavProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const navigate = useNavigate(); // For navigation after logout
+
+  const handleLogout = () => {
+    setIsAuthenticated(); // Call the logout function
+    setIsOpen(false);
+    navigate("/"); // Redirect to home page
+  };
 
   return (
     <nav className="text-amber-100">
@@ -108,15 +116,7 @@ export function Nav({
             </li>
             <li className="hover:underline">
               <button
-                onClick={() => {
-                  // Logout functionality
-                  remove("accessToken");
-                  remove("user");
-                  setIsAuthenticated(false);
-                  setIsOpen(false);
-                  // Redirect to the home page
-                  window.location.href = "/";
-                }}
+                onClick={handleLogout}
                 className="text-amber-100 font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
               >
                 Logout
