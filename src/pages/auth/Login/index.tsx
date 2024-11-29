@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { LoginData } from "../../../components/api/auth/loginData";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../components/context/authContext.tsx";
+import { useAuth } from "../../../components/context/authContext/index.tsx";
 
 interface Credentials {
   email: string;
