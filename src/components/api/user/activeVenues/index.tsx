@@ -1,7 +1,6 @@
-// src/components/api/activeListings.tsx
+// src/components/api/user/activeVenues.tsx
 
-import env from "../../Config"; // Adjust the path to your environment configuration
-import { load } from "../../../storage"; // Adjust the path to your storage utility
+import env from "../../Config"; // Adjust the path as necessary
 
 export interface Venue {
   id: string;
@@ -43,8 +42,8 @@ export async function getActiveListings(profileName: string): Promise<Venue[]> {
   const endpoint = `/holidaze/profiles/${profileName}/venues`;
   const url = new URL(endpoint, env.apiBaseUrl).toString();
 
-  // Retrieve the access token from localStorage
-  const accessToken = load("accessToken");
+  // Retrieve the access token directly from localStorage
+  const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     throw new Error("Access token not found. Please log in again.");
   }
@@ -60,7 +59,8 @@ export async function getActiveListings(profileName: string): Promise<Venue[]> {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch active listings.");
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch active listings.");
     }
 
     const responseData = await response.json();
