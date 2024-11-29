@@ -1,74 +1,98 @@
-// src/context/AuthContext.tsx
+// src/components/context/authContext.tsx
 
-import React, {
+import {
   createContext,
   useContext,
-  useEffect,
   useState,
+  useEffect,
   ReactNode,
 } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Define the shape of your AuthContext
+// Define the shape of the authentication context
 interface AuthContextType {
-  role: boolean; // true if venueManager, false otherwise
   isAuthenticated: boolean;
-  setAuth: (authData: { role: boolean }) => void;
+  user: User | null;
+  login: (accessToken: string, userData: User) => void;
+  logout: () => void;
 }
 
-// Create the AuthContext with default values
-const AuthContext = createContext<AuthContextType>({
-  role: false,
-  isAuthenticated: false,
-  setAuth: () => {},
-});
-
-// Define the props interface including children
-interface AuthProviderProps {
-  children: ReactNode;
+// Define the User interface
+interface Avatar {
+  url: string;
+  alt: string;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [role, setRole] = useState<boolean>(false);
+interface Banner {
+  url: string;
+  alt: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+  bio?: string;
+  avatar?: Avatar;
+  banner?: Banner;
+  venueManager: boolean;
+}
+
+// Create the context
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Provider component
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
 
-  const setAuth = (authData: { role: boolean }) => {
-    setRole(authData.role);
-    setIsAuthenticated(authData.role);
-
-    if (authData.role) {
-      localStorage.setItem("venueManager", "true");
-    } else {
-      localStorage.removeItem("venueManager");
-    }
-  };
-
+  // Initialize authentication state from storage
   useEffect(() => {
-    // On app load, parse the user data from localStorage
+    const storedToken = localStorage.getItem("accessToken");
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        if (parsedUser && parsedUser.venueManager) {
-          setRole(true);
-          setIsAuthenticated(true);
-        } else {
-          setRole(false);
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error("Failed to parse user data from local storage:", error);
-        setRole(false);
-        setIsAuthenticated(false);
-      }
+
+    if (storedToken && storedUser) {
+      setIsAuthenticated(true);
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
+  // Login function
+  const login = (accessToken: string, userData: User) => {
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setIsAuthenticated(true);
+    setUser(userData);
+  };
+
+  // Logout function
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+    setUser(null);
+    navigate("/"); // Redirect to home after logout
+  };
+
   return (
-    <AuthContext.Provider value={{ role, isAuthenticated, setAuth }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
 // Custom hook to use the AuthContext
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
