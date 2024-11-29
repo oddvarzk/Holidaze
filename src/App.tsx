@@ -1,5 +1,3 @@
-// src/App.tsx
-
 import { Routes, Route } from "react-router-dom"; // Removed BrowserRouter import
 import { Layout } from "./layouts";
 import Home from "./pages/Home";
@@ -13,10 +11,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CreateVenuePage from "./components/CreateVenuePage";
 import UpdateVenuePage from "./pages/venues/updateVenue";
 import SingleVenue from "./pages/venues/singleVenue";
+import NotFound from "./pages/NotFound.tsx";
 
 function App() {
   return (
-    // Removed <AuthProvider> as it's already in main.tsx
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
@@ -34,7 +32,6 @@ function App() {
         <Route path="venues" element={<VenueList />} />
         <Route path="about" element={<About />} />
         <Route path="venues/:id" element={<SingleVenue />} />{" "}
-        {/* Changed to plural for consistency */}
         <Route
           path="createVenue"
           element={
@@ -51,6 +48,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
