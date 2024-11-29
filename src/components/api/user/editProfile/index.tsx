@@ -1,107 +1,55 @@
 // src/components/api/user/editProfile.ts
 
-import env from "../../Config";
-import { load } from "../../../../components/storage"; // Import the load function to retrieve the access token
+import env from "../../Config"; // Adjust the path as necessary
+import { User } from "../../../../types/User"; // Adjust the path based on where User is defined
 
-interface Avatar {
-  url: string;
-  alt: string;
-}
-
-interface Banner {
-  url: string;
-  alt: string;
-}
-
-interface UpdateProfileData {
-  avatar?: Avatar;
-  banner?: Banner;
-  venueManager?: boolean;
-  bio?: string;
-  // Add other fields as necessary
-}
-
-interface EditProfileResponse {
-  data: {
-    name: string;
-    email: string;
-    bio?: string;
-    avatar?: Avatar;
-    banner?: Banner;
-    venueManager: boolean;
-    // Include other user fields as necessary
+interface EditProfileData {
+  avatar?: {
+    url: string;
+    alt: string;
   };
-  meta: any;
+  venueManager?: boolean;
+  // Add other editable fields as needed
 }
-
-const action = "/holidaze/profiles"; // Updated endpoint as per API documentation
-const method: "PUT" = "PUT"; // Updated method
 
 export async function editProfile(
-  name: string, // Using 'name' as per backend endpoint
-  updateData: UpdateProfileData
-): Promise<EditProfileResponse> {
+  profileName: string,
+  data: EditProfileData
+): Promise<{ data: User }> {
   if (!env.apiBaseUrl) {
-    throw new Error(
-      "API base URL is not defined. Check your environment variables."
-    );
+    throw new Error("API base URL is not defined.");
   }
 
-  // Construct the correct URL with proper encoding
-  const editProfileURL = new URL(
-    `${action}/${encodeURIComponent(name)}`,
-    env.apiBaseUrl
-  ).toString();
-  console.log("Edit Profile URL:", editProfileURL);
+  const endpoint = `/holidaze/profiles/${profileName}`;
+  const url = new URL(endpoint, env.apiBaseUrl).toString();
 
-  // Retrieve the access token from localStorage
-  const accessToken = load("accessToken"); // Ensure that 'accessToken' is stored in localStorage
+  const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     throw new Error("Access token not found. Please log in again.");
   }
 
   try {
-    console.log("Request payload:", updateData);
-
-    const response = await fetch(editProfileURL, {
-      method,
+    const response = await fetch(url, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
+        Authorization: `Bearer ${accessToken}`,
         "X-Noroff-API-Key": env.apiKey,
       },
-      body: JSON.stringify(updateData),
+      body: JSON.stringify(data),
     });
 
-    console.log("Response status:", response.status);
-
     if (!response.ok) {
-      // Attempt to parse the error message from the response body
-      let errorMessage = "Failed to update profile.";
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorMessage;
-        console.error("Error response:", errorData);
-      } catch (parseError) {
-        console.error("Error parsing error response:", parseError);
-      }
-      throw new Error(errorMessage);
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update profile.");
     }
 
-    // Parse the response body to get the updated user info
-    const responseData: EditProfileResponse = await response.json();
-    console.log("Profile update successful", responseData);
-
-    return responseData;
-  } catch (error) {
-    console.error("Error during profile update process:", error);
-    // Re-throw the error to be caught in the component
-    if (error instanceof Error) {
-      throw error;
-    } else {
-      throw new Error("An unknown error occurred during profile update.");
-    }
+    const responseData = await response.json();
+    return { data: responseData.data };
+  } catch (error: any) {
+    console.error("Error updating profile:", error);
+    throw new Error(
+      error.message || "An unknown error occurred while updating profile."
+    );
   }
 }
-
-export default editProfile;
