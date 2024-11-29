@@ -1,7 +1,7 @@
 // src/pages/VenueList.tsx
 
 import React, { useEffect, useState } from "react";
-import { getAllVenues, Venue } from "../../components/api/fetch/venues"; // Adjust the import path
+import { getAllVenues, Venue } from "../../components/api/venues/allVenues"; // Adjust the import path
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate

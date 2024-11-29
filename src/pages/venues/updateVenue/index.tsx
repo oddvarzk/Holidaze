@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
-import updateVenue from "../../../components/api/user/updateVenue";
-import getActiveListings from "../../../components/api/user/activeListings";
+import updateVenue from "../../../components/api/venues/updateVenue";
+import getActiveListings from "../../../components/api/user/activeVenues";
 import { load } from "../../../components/storage";
 import { CreateVenueFormValues } from "../../../types/CreateVenueTypes";
 

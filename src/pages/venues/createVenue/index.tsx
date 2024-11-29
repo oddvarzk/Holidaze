@@ -6,7 +6,7 @@ import {
   CreateVenueFormValues,
   CreateVenueResponse,
 } from "../../../types/CreateVenueTypes";
-import { createVenue } from "../../../components/api/user/createVenue"; // Adjust the path based on your project structure
+import { createVenue } from "../../../components/api/venues/createVenue"; // Adjust the path based on your project structure
 
 export function CreateVenueForm() {
   const {

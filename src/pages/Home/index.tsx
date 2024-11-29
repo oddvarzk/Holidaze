@@ -8,7 +8,7 @@ import palmTreeIcon from "../../assets/palmTree.svg";
 import mapIcon from "../../assets/mapIcon.svg";
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
-import { getAllVenues, Venue } from "../../components/api/fetch/venues";
+import { getAllVenues, Venue } from "../../components/api/venues/allVenues";
 import { Link } from "react-router-dom"; // Import Link
 
 export function Home() {

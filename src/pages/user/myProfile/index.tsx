@@ -7,8 +7,8 @@ import createIcon from "../../../assets/createIcon.svg";
 import { Link } from "react-router-dom";
 import getActiveListings, {
   Venue,
-} from "../../../components/api/user/activeListings"; // Import the new API function
-import deleteVenue from "../../../components/api/user/deleteVenue";
+} from "../../../components/api/user/activeVenues"; // Import the new API function
+import deleteVenue from "../../../components/api/venues/deleteVenue";
 
 interface Avatar {
   url: string;
@@ -283,8 +283,8 @@ export function MyProfile() {
               <Link to="/createVenue">
                 <div className="flex mt-1 cursor-pointer">
                   <img className="h-7" src={createIcon} alt="Create Icon" />
-                  <p className="px-1 font-Montserrat mt-1 text-sm text-btns">
-                    Create listing
+                  <p className="px-2 font-Montserrat mt-1 text-sm text-btns">
+                    Create new listing
                   </p>
                 </div>
               </Link>
@@ -294,7 +294,7 @@ export function MyProfile() {
             {listingsError ? (
               <p className="text-red-500 mt-5">{listingsError}</p>
             ) : (
-              <div className="mt-5 flex flex-wrap gap-5">
+              <div className="mt-5 flex flex-wrap justify-center gap-5">
                 {activeListings.length === 0 ? (
                   <p className="text-gray-500">No active listings found.</p>
                 ) : (
@@ -329,13 +329,20 @@ export function MyProfile() {
                         )}
                         <div className="flex flex-col">
                           <p className="font-medium text-sm">
-                            Price: {listing.price} NOK/night
+                            Price:{" "}
+                            <span className="font-light">
+                              {listing.price} NOK/night
+                            </span>
                           </p>
                           <p className="font-medium text-sm">
-                            Max Guests: {listing.maxGuests}
+                            Max Guests:{" "}
+                            <span className="font-light">
+                              {listing.maxGuests}
+                            </span>
                           </p>
                           <p className="font-medium text-sm">
-                            Rating: {listing.rating}
+                            Rating:{" "}
+                            <span className="font-light">{listing.rating}</span>
                           </p>
                         </div>
                       </div>
@@ -346,6 +353,7 @@ export function MyProfile() {
                 )}
               </div>
             )}
+            <div></div>
           </div>
         </div>
       </div>

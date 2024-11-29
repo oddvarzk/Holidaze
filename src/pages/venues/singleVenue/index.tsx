@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getVenueById, Venue } from "../../../components/api/fetch/venues"; // Adjust the import path
+import { getVenueById, Venue } from "../../../components/api/venues/allVenues"; // Adjust the import path
 import example from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
 
