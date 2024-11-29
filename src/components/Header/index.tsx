@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Nav from "../Nav";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../components/context/authContext.tsx";
+import { useAuth } from "../context/authContext/index.tsx";
 
 export function Header() {
   const { isAuthenticated, logout } = useAuth();
