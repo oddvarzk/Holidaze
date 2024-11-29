@@ -8,9 +8,8 @@ interface Credentials {
   password: string;
 }
 
-const navigate = useNavigate();
-
 export function LoginForm() {
+  const navigate = useNavigate(); // Move this inside the component
   const [profile, setProfile] = useState<Credentials>({
     email: "",
     password: "",
@@ -36,7 +35,7 @@ export function LoginForm() {
       save("user", user);
 
       // Redirect the user to the profile page
-      navigate("profile");
+      navigate("/profile"); // Corrected the route
     } catch (error) {
       setLoading(false);
       console.error("Login error:", error);
