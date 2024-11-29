@@ -30,7 +30,7 @@ interface User {
 }
 
 export function MyProfile() {
-  const { user: authUser, logout, login } = useAuth(); // Access user, logout, and login from context
+  const { user: authUser, login } = useAuth(); // Access user, logout, and login from context
   const [user, setUser] = useState<User | null>(authUser);
   const [newAvatarUrl, setNewAvatarUrl] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
