@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RegisterData } from "../../../components/api/registerData";
+import { RegisterData } from "../../../components/api/auth/registerData";
 
 export function RegisterForm() {
   const [profile, setProfile] = useState({

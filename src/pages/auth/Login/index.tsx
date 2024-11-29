@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LoginData } from "../../../components/api/loginData";
+import { LoginData } from "../../../components/api/auth/loginData";
 import { save } from "../../../components/storage"; // Adjust the import path
 
 interface Credentials {
