@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from "react";
+// src/components/Header.tsx
+
+import React, { useState } from "react";
 import Nav from "../Nav";
 import { Link, useNavigate } from "react-router-dom";
-import { load } from "../../components/storage";
+import { useAuth } from "../../components/context/authContext.tsx";
 
 export function Header() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const accessToken = load("accessToken");
-    setIsAuthenticated(!!accessToken);
-  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +31,7 @@ export function Header() {
         </div>
         <Nav
           isAuthenticated={isAuthenticated}
-          setIsAuthenticated={setIsAuthenticated}
+          setIsAuthenticated={logout} // Pass the logout function as setIsAuthenticated
           setShowSearch={setShowSearch}
         />
       </header>
