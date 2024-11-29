@@ -8,8 +8,8 @@ import {
   ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { User } from "../../../types/User";
-import { AuthContextType } from "../../../types/authContextType/index.tsx";
+import { User } from "../../../types/User"; // Ensure correct path
+import { AuthContextType } from "../../../types/authContextType"; // Ensure correct path
 
 // Create Context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true); // Initialize as true
   const navigate = useNavigate();
 
   // Initialize authentication state from storage

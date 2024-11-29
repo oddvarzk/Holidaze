@@ -1,14 +1,14 @@
 // src/pages/user/MyProfile.tsx
 
 import React, { useEffect, useState } from "react";
-import { editProfile } from "../../../components/api/user/editProfile"; // Import the corrected API function
+import { editProfile } from "../../../components/api/user/editProfile"; // Ensure this is correctly imported
 import createIcon from "../../../assets/createIcon.svg";
 import { Link } from "react-router-dom";
 import getActiveListings, {
   Venue,
-} from "../../../components/api/user/activeVenues"; // Import the new API function
+} from "../../../components/api/user/activeVenues"; // Ensure this is correctly imported
 import deleteVenue from "../../../components/api/venues/deleteVenue";
-import { useAuth } from "../../../components/context/authContext"; // Import the custom hook
+import { useAuth } from "../../../components/context/authContext"; // Ensure this is correctly imported
 
 interface Avatar {
   url: string;
@@ -30,8 +30,7 @@ interface User {
 }
 
 export function MyProfile() {
-  const { user: authUser, login } = useAuth(); // Access user, logout, and login from context
-  const [user, setUser] = useState<User | null>(authUser);
+  const { user: authUser, login } = useAuth(); // Access user and login from context
   const [newAvatarUrl, setNewAvatarUrl] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
@@ -43,8 +42,6 @@ export function MyProfile() {
 
   useEffect(() => {
     if (authUser) {
-      setUser(authUser);
-
       // Fetch active listings for the profile
       getActiveListings(authUser.name)
         .then((listings) => {
@@ -61,7 +58,7 @@ export function MyProfile() {
   };
 
   const handleAvatarUpdate = async () => {
-    if (!user) return;
+    if (!authUser) return;
 
     // Basic URL validation
     try {
@@ -76,25 +73,24 @@ export function MyProfile() {
     setUpdateSuccess("");
 
     try {
-      // Retrieve the access token from AuthContext
+      // Retrieve the access token from localStorage
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
         throw new Error("Access token not found. Please log in again.");
       }
 
-      const response = await editProfile(user.name, {
+      const response = await editProfile(authUser.name, {
         avatar: {
           url: newAvatarUrl,
-          alt: `${user.name}'s avatar`,
+          alt: `${authUser.name}'s avatar`,
         },
       });
 
       // Update user data via AuthContext
       const updatedUser: User = {
-        ...user,
+        ...authUser,
         avatar: response.data.avatar,
       };
-      setUser(updatedUser);
       login(accessToken, updatedUser); // Update context with new user data
 
       setUpdateSuccess("Avatar updated successfully!");
@@ -107,7 +103,7 @@ export function MyProfile() {
   };
 
   const handleBecomeVenueManager = async () => {
-    if (!user) return;
+    if (!authUser) return;
 
     // Confirm action with the user
     const confirmAction = window.confirm(
@@ -120,22 +116,21 @@ export function MyProfile() {
     setUpdateSuccess("");
 
     try {
-      // Retrieve the access token from AuthContext
+      // Retrieve the access token from localStorage
       const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
         throw new Error("Access token not found. Please log in again.");
       }
 
-      const response = await editProfile(user.name, {
+      const response = await editProfile(authUser.name, {
         venueManager: true,
       });
 
       // Update user data via AuthContext
       const updatedUser: User = {
-        ...user,
+        ...authUser,
         venueManager: response.data.venueManager,
       };
-      setUser(updatedUser);
       login(accessToken, updatedUser); // Update context with new user data
 
       setUpdateSuccess("You are now a Venue Manager!");
@@ -161,7 +156,7 @@ export function MyProfile() {
     }
   };
 
-  if (!user) {
+  if (!authUser) {
     return <p>Loading user data...</p>;
   }
 
@@ -173,8 +168,8 @@ export function MyProfile() {
             <div className="flex justify-center">
               <img
                 className="rounded-full h-32 w-32 object-cover"
-                src={user.avatar?.url}
-                alt={user.avatar?.alt || "Profile Avatar"}
+                src={authUser.avatar?.url || "/default-avatar.png"}
+                alt={authUser.avatar?.alt || "Profile Avatar"}
               />
             </div>
             <div className="mb-5">
@@ -203,7 +198,8 @@ export function MyProfile() {
                 )}
               </div>
               <p className="font-Montserrat font-semibold py-2">
-                Bio: <span className="font-light">{user.bio || "No bio"}</span>
+                Bio:{" "}
+                <span className="font-light">{authUser.bio || "No bio"}</span>
               </p>
             </div>
           </div>
@@ -219,26 +215,26 @@ export function MyProfile() {
                 <div className="flex px-5 md:px-5 flex-col font-Montserrat py-5">
                   <p className="font-light mb-3">
                     <span className="font-semibold">Username: </span>
-                    {user.name}
+                    {authUser.name}
                   </p>
                   <p className="font-light mb-3">
                     <span className="font-semibold">Email: </span>
-                    {user.email}
+                    {authUser.email}
                   </p>
                   <p className="font-light mb-3">
                     <span className="font-semibold">Bio: </span>
-                    {user.bio || "No bio"}
+                    {authUser.bio || "No bio"}
                   </p>
                   <p className="font-light mb-3">
                     <span className="font-semibold">Venue Manager: </span>
-                    {user.venueManager ? "Yes" : "No"}
+                    {authUser.venueManager ? "Yes" : "No"}
                   </p>
                   {/* Add more user info as needed */}
                 </div>
               </div>
               <div className="px-5 mb-3 items-center flex flex-col font-Montserrat">
                 <h1 className="py-5">Register account as venue manager?</h1>
-                {user.venueManager ? (
+                {authUser.venueManager ? (
                   <p className="text-green-500">You are a Venue Manager.</p>
                 ) : (
                   <button
