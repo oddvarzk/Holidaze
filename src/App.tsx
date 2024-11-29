@@ -23,7 +23,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="register" element={<RegisterForm />} />
             <Route path="login" element={<LoginForm />} />
-            <Route path="profile" element={<MyProfile />} />
+            <Route path="/profile" element={<MyProfile />} />
             <Route path="venues" element={<VenueList />} />
             <Route path="about" element={<About />} />
             <Route path="/venue/:id" element={<SingleVenue />} />
