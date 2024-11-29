@@ -31,7 +31,7 @@ function App() {
         />
         <Route path="venues" element={<VenueList />} />
         <Route path="about" element={<About />} />
-        <Route path="venues/:id" element={<SingleVenue />} />{" "}
+        <Route path="venue/:id" element={<SingleVenue />} />{" "}
         <Route
           path="createVenue"
           element={
