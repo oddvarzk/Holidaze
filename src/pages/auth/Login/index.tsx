@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { LoginData } from "../../../components/api/auth/loginData";
 import { save } from "../../../components/storage"; // Adjust the import path
+import { useNavigate } from "react-router-dom";
 
 interface Credentials {
   email: string;
   password: string;
 }
+
+const navigate = useNavigate();
 
 export function LoginForm() {
   const [profile, setProfile] = useState<Credentials>({
@@ -33,7 +36,7 @@ export function LoginForm() {
       save("user", user);
 
       // Redirect the user to the profile page
-      window.location.href = "/profile";
+      navigate("profile");
     } catch (error) {
       setLoading(false);
       console.error("Login error:", error);
