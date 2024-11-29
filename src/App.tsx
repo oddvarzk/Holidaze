@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Layout } from "./layouts";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
@@ -9,24 +9,31 @@ import VenueList from "./pages/venues";
 import About from "./pages/about";
 import { AuthProvider } from "./components/context/authContext.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
-import CreateVenuePage from "./components/CreateVenuePage/index.tsx";
-import UpdateVenuePage from "./pages/venues/updateVenue/index.tsx";
-import SingleVenue from "./pages/venues/singleVenue/index.tsx";
+import CreateVenuePage from "./components/CreateVenuePage";
+import UpdateVenuePage from "./pages/venues/updateVenue";
+import SingleVenue from "./pages/venues/singleVenue";
 
 function App() {
   return (
-    <div>
-      <AuthProvider>
+    <AuthProvider>
+      <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="contact" element={<Contact />} />
             <Route path="register" element={<RegisterForm />} />
             <Route path="login" element={<LoginForm />} />
-            <Route path="/profile" element={<MyProfile />} />
+            <Route
+              path="profile"
+              element={
+                <ProtectedRoute>
+                  <MyProfile />
+                </ProtectedRoute>
+              }
+            />
             <Route path="venues" element={<VenueList />} />
             <Route path="about" element={<About />} />
-            <Route path="/venue/:id" element={<SingleVenue />} />
+            <Route path="venue/:id" element={<SingleVenue />} />
             <Route
               path="createVenue"
               element={
@@ -45,8 +52,8 @@ function App() {
             />
           </Route>
         </Routes>
-      </AuthProvider>
-    </div>
+      </Router>
+    </AuthProvider>
   );
 }
 
