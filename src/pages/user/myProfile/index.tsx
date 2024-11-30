@@ -9,6 +9,10 @@ import getActiveListings, {
 } from "../../../components/api/user/activeVenues"; // Ensure this is correctly imported
 import deleteVenue from "../../../components/api/venues/deleteVenue";
 import { useAuth } from "../../../components/context/authContext"; // Ensure this is correctly imported
+import {
+  fetchBookingsByProfile,
+  UserBooking,
+} from "../../../components/api/bookings/bookingsAPI"; // Import the new function and interface
 
 interface Avatar {
   url: string;
@@ -40,6 +44,11 @@ export function MyProfile() {
   const [isBecomingVenueManager, setIsBecomingVenueManager] =
     useState<boolean>(false);
 
+  // New States for User Bookings
+  const [userBookings, setUserBookings] = useState<UserBooking[]>([]);
+  const [bookingsError, setBookingsError] = useState<string | null>(null);
+  const [bookingsLoading, setBookingsLoading] = useState<boolean>(false);
+
   useEffect(() => {
     if (authUser) {
       // Fetch active listings for the profile
@@ -49,6 +58,20 @@ export function MyProfile() {
         })
         .catch((error) => {
           setListingsError(error.message || "Failed to fetch listings.");
+        });
+
+      // Fetch bookings made by the profile
+      setBookingsLoading(true);
+      fetchBookingsByProfile(authUser.name)
+        .then((bookings) => {
+          setUserBookings(bookings);
+          setBookingsError(null);
+        })
+        .catch((error) => {
+          setBookingsError(error.message || "Failed to fetch bookings.");
+        })
+        .finally(() => {
+          setBookingsLoading(false);
         });
     }
   }, [authUser]);
@@ -208,7 +231,7 @@ export function MyProfile() {
         <div>
           <div className="mx-auto mb-10 w-fit md:max-w-full">
             <h1 className="font-Playfair text-2xl py-5 text-tiner font-medium">
-              Your information
+              Your Information
             </h1>
             <div className="flex flex-wrap justify-center md:justify-center bg-tin px-1 md:px-5 py-5 text-paleSand md:gap-20 shadow-2xl rounded-lg">
               <div>
@@ -233,7 +256,7 @@ export function MyProfile() {
                 </div>
               </div>
               <div className="px-5 mb-3 items-center flex flex-col font-Montserrat">
-                <h1 className="py-5">Register account as venue manager?</h1>
+                <h1 className="py-5">Register Account as Venue Manager?</h1>
                 {authUser.venueManager ? (
                   <p className="text-green-500">You are a Venue Manager.</p>
                 ) : (
@@ -264,13 +287,13 @@ export function MyProfile() {
           <div className="px-5 w-fit mx-auto mb-10">
             <div className="flex justify-between gap-5">
               <h1 className="font-Playfair text-2xl text-tiner font-medium mr-5">
-                Active listings
+                Active Listings
               </h1>
               <Link to="/createVenue">
                 <div className="flex mt-1 cursor-pointer">
                   <img className="h-7" src={createIcon} alt="Create Icon" />
                   <p className="px-2 font-Montserrat mt-1 text-sm text-btns">
-                    Create new listing
+                    Create New Listing
                   </p>
                 </div>
               </Link>
@@ -339,7 +362,63 @@ export function MyProfile() {
                 )}
               </div>
             )}
-            <div></div>
+          </div>
+
+          {/* Active Bookings Section */}
+          <div className="px-5 w-fit mx-auto mb-10">
+            <h1 className="font-Playfair text-2xl text-tiner font-medium mb-5">
+              Your upcomming bookings
+            </h1>
+
+            {/* Loading Indicator */}
+            {bookingsLoading && <p>Loading your bookings...</p>}
+
+            {/* Error State */}
+            {bookingsError && (
+              <p className="text-red-500 mt-2">{bookingsError}</p>
+            )}
+
+            {/* Display Bookings */}
+            {!bookingsLoading && !bookingsError && (
+              <div className="flex flex-col gap-5">
+                {userBookings.length === 0 ? (
+                  <p className="text-gray-500">You have no bookings.</p>
+                ) : (
+                  userBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="bg-tin px-5 text-paleSand rounded-lg py-5 font-Montserrat"
+                    >
+                      <h2 className="font-semibold text-lg mb-2">
+                        Booking ID: {booking.id}
+                      </h2>
+                      <p className="font-medium text-sm">
+                        Date From:{" "}
+                        <span className="font-light">
+                          {new Date(booking.dateFrom).toLocaleDateString()}
+                        </span>
+                      </p>
+                      <p className="font-medium text-sm">
+                        Date To:{" "}
+                        <span className="font-light">
+                          {new Date(booking.dateTo).toLocaleDateString()}
+                        </span>
+                      </p>
+                      <p className="font-medium text-sm">
+                        Guests:{" "}
+                        <span className="font-light">{booking.guests}</span>
+                      </p>
+                      <p className="font-medium text-sm">
+                        Booked On:{" "}
+                        <span className="font-light">
+                          {new Date(booking.created).toLocaleDateString()}
+                        </span>
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

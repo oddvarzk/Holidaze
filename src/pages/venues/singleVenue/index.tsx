@@ -1,24 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// src/pages/SingleVenue/SingleVenue.tsx
+
+import React, { useEffect, useState, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { getVenueById, Venue } from "../../../components/api/venues/allVenues";
-import { DayPicker, DateRange } from "react-day-picker";
+import {
+  createBooking,
+  BookingRequest,
+} from "../../../components/api/bookings/bookingsAPI";
+import { fetchBookingsByDates } from "../../../components/api/bookings/bookingsAPI";
+import { DayPicker, DateRange as DayPickerDateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { eachDayOfInterval, parseISO, isSameDay } from "date-fns";
+import { parseISO, eachDayOfInterval } from "date-fns";
 import exampleImage from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
 
+// Define a separate type for booked date ranges
+interface BookingRange {
+  from: Date;
+  to: Date;
+}
+
 const SingleVenue: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [venue, setVenue] = useState<Venue | null>(null);
-  const [bookedDates, setBookedDates] = useState<Date[]>([]);
+  const [bookedDateRanges, setBookedDateRanges] = useState<BookingRange[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(
-    undefined
-  );
+  const [selectedRange, setSelectedRange] = useState<
+    DayPickerDateRange | undefined
+  >(undefined);
   const [availabilityChecked, setAvailabilityChecked] =
     useState<boolean>(false);
   const [isAvailable, setIsAvailable] = useState<boolean>(false);
+  const [guests, setGuests] = useState<number>(1);
+  const [bookingMessage, setBookingMessage] = useState<string>("");
+
+  const accessToken = localStorage.getItem("accessToken");
 
   // Fetch venue details with bookings
   useEffect(() => {
@@ -31,20 +49,8 @@ const SingleVenue: React.FC = () => {
 
       setLoading(true);
       try {
-        const response = await getVenueById(id, true); // Include bookings in the response
+        const response = await getVenueById(id, true); // Include bookings
         setVenue(response.data);
-
-        // Process booked dates
-        const dates: Date[] = [];
-        if (response.data.bookings) {
-          response.data.bookings.forEach((booking) => {
-            const start = parseISO(booking.dateFrom);
-            const end = parseISO(booking.dateTo);
-            const range = eachDayOfInterval({ start, end });
-            dates.push(...range);
-          });
-        }
-        setBookedDates(dates);
       } catch (err: any) {
         setError("Failed to fetch venue details.");
       } finally {
@@ -54,6 +60,28 @@ const SingleVenue: React.FC = () => {
 
     fetchVenue();
   }, [id]);
+
+  // Memoize booked date ranges
+  const bookedDateRangesMemo = useMemo<BookingRange[]>(() => {
+    return (
+      venue?.bookings?.map((booking) => ({
+        from: parseISO(booking.dateFrom),
+        to: parseISO(booking.dateTo),
+      })) || []
+    );
+  }, [venue]);
+
+  // Update bookedDateRanges state when memo changes
+  useEffect(() => {
+    setBookedDateRanges(bookedDateRangesMemo);
+  }, [bookedDateRangesMemo]);
+
+  // Function to check if a date is booked
+  const isDateBooked = (date: Date): boolean => {
+    return bookedDateRanges.some(
+      (range) => date >= range.from && date <= range.to
+    );
+  };
 
   // Check availability for selected dates
   const checkAvailability = () => {
@@ -65,13 +93,61 @@ const SingleVenue: React.FC = () => {
 
     setError("");
     setAvailabilityChecked(false);
-    const selectedDates = eachDayOfInterval({ start: from, end: to });
-    const hasOverlap = selectedDates.some((date) =>
-      bookedDates.some((bookedDate) => isSameDay(date, bookedDate))
+    const selectedDates = Array.from(
+      eachDayOfInterval({ start: from, end: to })
     );
+    const hasOverlap = selectedDates.some((date) => isDateBooked(date));
 
     setIsAvailable(!hasOverlap);
     setAvailabilityChecked(true);
+  };
+
+  // Handle booking submission
+  const handleBooking = async () => {
+    const { from, to } = selectedRange || {};
+    if (!from || !to) {
+      setBookingMessage("Please select both check-in and check-out dates.");
+      return;
+    }
+    if (!isAvailable) {
+      setBookingMessage("Selected dates are unavailable.");
+      return;
+    }
+
+    if (!accessToken) {
+      setBookingMessage("Please log in to make a booking.");
+      navigate("/login"); // Adjust the login route as necessary
+      return;
+    }
+
+    try {
+      const bookingDetails: BookingRequest = {
+        dateFrom: from.toISOString(),
+        dateTo: to.toISOString(),
+        guests,
+        venueId: venue!.id,
+      };
+
+      const response = await createBooking(bookingDetails);
+      setBookingMessage(
+        `Booking successful! Your booking ID is ${response.data.id}.`
+      );
+      setSelectedRange(undefined); // Clear selection after booking
+
+      // Refresh booked dates to include the new booking
+      const updatedBookings = await fetchBookingsByDates(
+        venue!.id,
+        from.toISOString(),
+        to.toISOString()
+      );
+      const updatedRanges: BookingRange[] = updatedBookings.map((booking) => ({
+        from: parseISO(booking.dateFrom),
+        to: parseISO(booking.dateTo),
+      }));
+      setBookedDateRanges(updatedRanges);
+    } catch (err: any) {
+      setBookingMessage(`Booking failed: ${err.message}`);
+    }
   };
 
   // Loading state
@@ -84,7 +160,7 @@ const SingleVenue: React.FC = () => {
   }
 
   // Error state
-  if (error) {
+  if (error && !venue) {
     return (
       <div className="flex justify-center items-center min-h-screen text-red-500">
         {error}
@@ -100,7 +176,6 @@ const SingleVenue: React.FC = () => {
     );
   }
 
-  // Render venue details
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-5 py-10">
@@ -115,6 +190,7 @@ const SingleVenue: React.FC = () => {
                 key={index}
                 src={mediaItem.url}
                 alt={mediaItem.alt || "Venue Image"}
+                loading="lazy" // Add lazy loading
                 className="h-64 w-full md:w-1/2 lg:w-1/3 object-cover rounded-lg shadow-md"
               />
             ))
@@ -122,6 +198,7 @@ const SingleVenue: React.FC = () => {
             <img
               src={exampleImage}
               alt="Default Venue"
+              loading="lazy" // Add lazy loading
               className="h-64 w-full md:w-1/2 lg:w-1/3 object-cover rounded-lg shadow-md"
             />
           )}
@@ -153,36 +230,73 @@ const SingleVenue: React.FC = () => {
         </div>
 
         {/* Booking Section */}
-        <div className="mt-8 bg-gray-100 p-6 rounded-lg">
-          <h2 className="text-xl font-bold text-gray-900">Book Your Stay</h2>
-          <DayPicker
-            mode="range"
-            selected={selectedRange}
-            onSelect={setSelectedRange}
-            disabled={[
-              ...bookedDates, // Disable booked dates
-              { before: new Date() }, // Disable past dates
-            ]}
-            className="mt-4"
-          />
-          <button
-            onClick={checkAvailability}
-            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            Check Availability
-          </button>
-          {availabilityChecked && (
-            <p
-              className={`mt-4 ${
-                isAvailable ? "text-green-500" : "text-red-500"
-              }`}
+        {accessToken ? (
+          <div className="mt-8 bg-gray-100 p-6 rounded-lg">
+            <h2 className="text-xl font-bold text-gray-900">Book Your Stay</h2>
+            <DayPicker
+              mode="range"
+              selected={selectedRange}
+              onSelect={setSelectedRange}
+              disabled={(date: Date) => date < new Date() || isDateBooked(date)}
+              className="mt-4"
+            />
+            <div className="mt-4">
+              <label htmlFor="guests" className="block text-gray-700">
+                Number of Guests:
+              </label>
+              <input
+                type="number"
+                id="guests"
+                value={guests}
+                onChange={(e) => setGuests(parseInt(e.target.value))}
+                min="1"
+                max={venue.maxGuests}
+                placeholder="Enter number of guests"
+                className="mt-1 px-4 py-2 border rounded-lg w-full"
+              />
+            </div>
+            <button
+              onClick={checkAvailability}
+              className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
-              {isAvailable
-                ? "The venue is available for the selected dates!"
-                : "Selected dates are unavailable. Please try other dates."}
-            </p>
-          )}
-        </div>
+              Check Availability
+            </button>
+            {availabilityChecked && (
+              <p
+                className={`mt-4 ${
+                  isAvailable ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {isAvailable
+                  ? "The venue is available for the selected dates!"
+                  : "Selected dates are unavailable. Please try other dates."}
+              </p>
+            )}
+            {isAvailable && (
+              <button
+                onClick={handleBooking}
+                className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              >
+                Book Now
+              </button>
+            )}
+            {bookingMessage && (
+              <p
+                className={`mt-4 ${
+                  bookingMessage.startsWith("Booking successful")
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {bookingMessage}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="mt-8 bg-gray-100 p-6 rounded-lg">
+            <p className="text-red-500">Please log in to book this venue.</p>
+          </div>
+        )}
 
         {/* Amenities */}
         <div className="mt-8">
