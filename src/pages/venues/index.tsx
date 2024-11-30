@@ -1,10 +1,15 @@
-// src/pages/VenueList.tsx
+// src/components/VenueList.tsx
 
 import React, { useEffect, useState } from "react";
 import { getAllVenues, Venue } from "../../components/api/venues/allVenues"; // Adjust the import path
+import {
+  fetchBookingsByDates,
+  Booking,
+} from "../../components/api/bookings/bookingsAPI"; // Import bookings API
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
+import CheckinData from "../../components/BookingSearch"; // Import the updated CheckinData component
 
 const VenueList: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -18,6 +23,8 @@ const VenueList: React.FC = () => {
   // Parse query parameters from URL
   const params = new URLSearchParams(location.search);
   const query = params.get("query") || "";
+  const dateFrom = params.get("dateFrom") || "";
+  const dateTo = params.get("dateTo") || "";
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -36,33 +43,91 @@ const VenueList: React.FC = () => {
     fetchVenues();
   }, []);
 
-  // Filter venues based on the search query
   useEffect(() => {
-    const trimmedQuery = query.trim().toLowerCase();
-    if (trimmedQuery) {
-      const filtered = venues.filter((venue) =>
-        venue.name.toLowerCase().includes(trimmedQuery)
-      );
-      setFilteredVenues(filtered);
-    } else {
-      setFilteredVenues(venues);
-    }
-  }, [venues, query]);
+    const filterVenues = async () => {
+      if (!dateFrom || !dateTo) {
+        // If no dates are provided, filter by query only
+        const trimmedQuery = query.trim().toLowerCase();
+        if (trimmedQuery) {
+          const filtered = venues.filter((venue) =>
+            venue.name.toLowerCase().includes(trimmedQuery)
+          );
+          setFilteredVenues(filtered);
+        } else {
+          setFilteredVenues(venues);
+        }
+        return;
+      }
+
+      try {
+        // Fetch bookings within the specified dates for all venues
+        // Assuming fetchBookingsByDates can fetch bookings for all venues by passing an empty venueId
+        // If not, consider implementing an API endpoint that returns booked venue IDs for the date range
+
+        const bookings: Booking[] = await fetchBookingsByDates(
+          "",
+          dateFrom,
+          dateTo
+        ); // Adjust if necessary
+
+        // Collect all booked venue IDs
+        const bookedVenueIds = new Set<string>();
+        bookings.forEach((booking) => {
+          if (booking.venue && booking.venue.id) {
+            bookedVenueIds.add(booking.venue.id);
+          }
+        });
+
+        // Filter out venues that are booked
+        const availableVenues = venues.filter(
+          (venue) => !bookedVenueIds.has(venue.id)
+        );
+
+        // Further filter by query if present
+        const trimmedQuery = query.trim().toLowerCase();
+        const finalFiltered = trimmedQuery
+          ? availableVenues.filter((venue) =>
+              venue.name.toLowerCase().includes(trimmedQuery)
+            )
+          : availableVenues;
+
+        setFilteredVenues(finalFiltered);
+      } catch (err) {
+        setError("Failed to filter venues by availability.");
+        console.error("Error filtering venues:", err);
+      }
+    };
+
+    filterVenues();
+  }, [venues, query, dateFrom, dateTo]);
 
   const handleVenueClick = (id: string) => {
     navigate(`/venue/${id}`);
   };
 
   return (
-    <div className="bg-paleSand">
-      <div className="px-5 py-5 mt-4">
+    <div className="bg-paleSand min-h-screen">
+      <div className="container mx-auto px-5 py-10">
+        {/* Date Range Picker */}
+        <CheckinData />
+
         <h1 className="font-Playfair font-normal text-center text-tiner text-3xl py-5">
-          {query ? `Search Results for "${query}"` : "All Venues"}
+          {query || dateFrom || dateTo
+            ? `Search Results for "${query}"${
+                dateFrom && dateTo
+                  ? ` from ${new Date(
+                      dateFrom
+                    ).toLocaleDateString()} to ${new Date(
+                      dateTo
+                    ).toLocaleDateString()}`
+                  : ""
+              }`
+            : "All Venues"}
         </h1>
         {loading ? (
           <p>Loading venues...</p>
         ) : error ? (
-          <p>{error}</p>
+          <p className="text-red-500">{error}</p>
         ) : (
           <div className="flex flex-wrap justify-center py-5 gap-10">
             {filteredVenues.length > 0 ? (

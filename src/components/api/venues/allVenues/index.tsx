@@ -1,9 +1,8 @@
+// src/components/api/venues/allVenues.tsx
+
 import env from "../../Config";
 
-// Base URL of your API
-const BASE_URL = env.apiBaseUrl;
-
-// Interfaces for TypeScript
+// Existing Interface
 export interface Venue {
   id: string;
   name: string;
@@ -32,19 +31,11 @@ export interface Venue {
     lat: number;
     lng: number;
   };
-}
-
-export interface VenuesResponse {
-  data: Venue[];
-  meta: {
-    isFirstPage: boolean;
-    isLastPage: boolean;
-    currentPage: number;
-    previousPage: number | null;
-    nextPage: number | null;
-    pageCount: number;
-    totalCount: number;
-  };
+  bookings?: Array<{
+    id: string;
+    dateFrom: string;
+    dateTo: string;
+  }>;
 }
 
 export interface SingleVenueResponse {
@@ -52,51 +43,29 @@ export interface SingleVenueResponse {
   meta: object;
 }
 
-// Function to retrieve all venues by fetching all pages
-export const getAllVenues = async (): Promise<Venue[]> => {
-  let allVenues: Venue[] = [];
-  let page = 1;
-  let totalPages = 1;
-  const limit = 50; // Adjust the limit based on your API's max limit
-
-  do {
-    const url = `${BASE_URL}/holidaze/venues?page=${page}&limit=${limit}`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching venues: ${response.statusText}`);
-    }
-
-    const data: VenuesResponse = await response.json();
-
-    allVenues = allVenues.concat(data.data);
-
-    totalPages = data.meta.pageCount;
-    page += 1;
-  } while (page <= totalPages);
-
-  return allVenues;
-};
-
-// Function to retrieve a single venue by ID
+// Modified `getVenueById` function to include bookings
 export const getVenueById = async (
-  id: string
+  id: string,
+  includeBookings: boolean = false
 ): Promise<SingleVenueResponse> => {
-  const response = await fetch(`${BASE_URL}/holidaze/venues/${id}`, {
+  const endpoint = `/holidaze/venues/${id}`;
+  const url = new URL(endpoint, env.apiBaseUrl);
+
+  if (includeBookings) {
+    url.searchParams.append("_bookings", "true");
+  }
+
+  const response = await fetch(url.toString(), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "X-Noroff-API-Key": env.apiKey,
     },
   });
 
   if (!response.ok) {
-    throw new Error(`Error fetching venue ${id}: ${response.statusText}`);
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to fetch venue.");
   }
 
   const data: SingleVenueResponse = await response.json();
