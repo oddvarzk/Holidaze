@@ -1,13 +1,12 @@
 // src/pages/SingleVenue/SingleVenue.tsx
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getVenueById, Venue } from "../../../components/api/venues/allVenues";
+import { getVenueById, Venue } from "../../../components/api/venues/allVenues"; // Updated import path
 import {
   createBooking,
   BookingRequest,
 } from "../../../components/api/bookings/bookingsAPI";
-import { fetchBookingsByDates } from "../../../components/api/bookings/bookingsAPI";
 import { DayPicker, DateRange as DayPickerDateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { parseISO, eachDayOfInterval } from "date-fns";
@@ -37,6 +36,7 @@ const SingleVenue: React.FC = () => {
   const [bookingMessage, setBookingMessage] = useState<string>("");
 
   const accessToken = localStorage.getItem("accessToken");
+  const isAuthenticated = !!accessToken;
 
   // Fetch venue details with bookings
   useEffect(() => {
@@ -51,8 +51,19 @@ const SingleVenue: React.FC = () => {
       try {
         const response = await getVenueById(id, true); // Include bookings
         setVenue(response.data);
+
+        if (response.data.bookings) {
+          const bookingRanges: BookingRange[] = response.data.bookings.map(
+            (booking) => ({
+              from: parseISO(booking.dateFrom),
+              to: parseISO(booking.dateTo),
+            })
+          );
+          setBookedDateRanges(bookingRanges);
+        }
       } catch (err: any) {
         setError("Failed to fetch venue details.");
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -60,21 +71,6 @@ const SingleVenue: React.FC = () => {
 
     fetchVenue();
   }, [id]);
-
-  // Memoize booked date ranges
-  const bookedDateRangesMemo = useMemo<BookingRange[]>(() => {
-    return (
-      venue?.bookings?.map((booking) => ({
-        from: parseISO(booking.dateFrom),
-        to: parseISO(booking.dateTo),
-      })) || []
-    );
-  }, [venue]);
-
-  // Update bookedDateRanges state when memo changes
-  useEffect(() => {
-    setBookedDateRanges(bookedDateRangesMemo);
-  }, [bookedDateRangesMemo]);
 
   // Function to check if a date is booked
   const isDateBooked = (date: Date): boolean => {
@@ -114,7 +110,7 @@ const SingleVenue: React.FC = () => {
       return;
     }
 
-    if (!accessToken) {
+    if (!isAuthenticated) {
       setBookingMessage("Please log in to make a booking.");
       navigate("/login"); // Adjust the login route as necessary
       return;
@@ -135,18 +131,20 @@ const SingleVenue: React.FC = () => {
       setSelectedRange(undefined); // Clear selection after booking
 
       // Refresh booked dates to include the new booking
-      const updatedBookings = await fetchBookingsByDates(
-        venue!.id,
-        from.toISOString(),
-        to.toISOString()
-      );
-      const updatedRanges: BookingRange[] = updatedBookings.map((booking) => ({
-        from: parseISO(booking.dateFrom),
-        to: parseISO(booking.dateTo),
-      }));
-      setBookedDateRanges(updatedRanges);
+      // Re-fetch venue data to get updated bookings
+      const updatedResponse = await getVenueById(id!, true);
+      if (updatedResponse.data.bookings) {
+        const updatedRanges: BookingRange[] = updatedResponse.data.bookings.map(
+          (booking) => ({
+            from: parseISO(booking.dateFrom),
+            to: parseISO(booking.dateTo),
+          })
+        );
+        setBookedDateRanges(updatedRanges);
+      }
     } catch (err: any) {
       setBookingMessage(`Booking failed: ${err.message}`);
+      console.error("Booking error:", err);
     }
   };
 
@@ -230,73 +228,67 @@ const SingleVenue: React.FC = () => {
         </div>
 
         {/* Booking Section */}
-        {accessToken ? (
-          <div className="mt-8 bg-gray-100 p-6 rounded-lg">
-            <h2 className="text-xl font-bold text-gray-900">Book Your Stay</h2>
-            <DayPicker
-              mode="range"
-              selected={selectedRange}
-              onSelect={setSelectedRange}
-              disabled={(date: Date) => date < new Date() || isDateBooked(date)}
-              className="mt-4"
+        <div className="mt-8 bg-gray-100 p-6 rounded-lg">
+          <h2 className="text-xl font-bold text-gray-900">Book Your Stay</h2>
+          <DayPicker
+            mode="range"
+            selected={selectedRange}
+            onSelect={setSelectedRange}
+            disabled={(date: Date) => date < new Date() || isDateBooked(date)}
+            className="mt-4"
+          />
+          <div className="mt-4">
+            <label htmlFor="guests" className="block text-gray-700">
+              Number of Guests:
+            </label>
+            <input
+              type="number"
+              id="guests"
+              value={guests}
+              onChange={(e) => setGuests(parseInt(e.target.value))}
+              min="1"
+              max={venue.maxGuests}
+              placeholder="Enter number of guests"
+              className="mt-1 px-4 py-2 border rounded-lg w-full"
             />
-            <div className="mt-4">
-              <label htmlFor="guests" className="block text-gray-700">
-                Number of Guests:
-              </label>
-              <input
-                type="number"
-                id="guests"
-                value={guests}
-                onChange={(e) => setGuests(parseInt(e.target.value))}
-                min="1"
-                max={venue.maxGuests}
-                placeholder="Enter number of guests"
-                className="mt-1 px-4 py-2 border rounded-lg w-full"
-              />
-            </div>
-            <button
-              onClick={checkAvailability}
-              className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          </div>
+          <button
+            onClick={checkAvailability}
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Check Availability
+          </button>
+          {availabilityChecked && (
+            <p
+              className={`mt-4 ${
+                isAvailable ? "text-green-500" : "text-red-500"
+              }`}
             >
-              Check Availability
+              {isAvailable
+                ? "The venue is available for the selected dates!"
+                : "Selected dates are unavailable. Please try other dates."}
+            </p>
+          )}
+          {isAvailable && (
+            <button
+              onClick={handleBooking}
+              className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              Book Now
             </button>
-            {availabilityChecked && (
-              <p
-                className={`mt-4 ${
-                  isAvailable ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                {isAvailable
-                  ? "The venue is available for the selected dates!"
-                  : "Selected dates are unavailable. Please try other dates."}
-              </p>
-            )}
-            {isAvailable && (
-              <button
-                onClick={handleBooking}
-                className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-              >
-                Book Now
-              </button>
-            )}
-            {bookingMessage && (
-              <p
-                className={`mt-4 ${
-                  bookingMessage.startsWith("Booking successful")
-                    ? "text-green-500"
-                    : "text-red-500"
-                }`}
-              >
-                {bookingMessage}
-              </p>
-            )}
-          </div>
-        ) : (
-          <div className="mt-8 bg-gray-100 p-6 rounded-lg">
-            <p className="text-red-500">Please log in to book this venue.</p>
-          </div>
-        )}
+          )}
+          {bookingMessage && (
+            <p
+              className={`mt-4 ${
+                bookingMessage.startsWith("Booking successful")
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
+            >
+              {bookingMessage}
+            </p>
+          )}
+        </div>
 
         {/* Amenities */}
         <div className="mt-8">
