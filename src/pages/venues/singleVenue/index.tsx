@@ -1,3 +1,5 @@
+// src/pages/SingleVenue/SingleVenue.tsx
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getVenueById, Venue } from "../../../components/api/venues/allVenues";
@@ -13,7 +15,7 @@ import { parseISO, eachDayOfInterval } from "date-fns";
 import exampleImage from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
 import Loader from "../../../components/Utility/Loader";
-import StarRating from "../../../components/Utility/StarRating";
+import StarRating from "../../../components/Utility/StarRating"; // Import StarRating
 
 interface BookingRange {
   from: Date;
@@ -234,8 +236,9 @@ const SingleVenue: React.FC = () => {
             />
           )}
         </div>
+
+        {/* Star Rating */}
         <div className="flex items-center mb-5">
-          {/* Integrate StarRating Component */}
           <StarRating rating={venue.rating || 0} />
           <span className="ml-2 text-sm text-gray-700">
             ({venue.rating?.toFixed(1) || "0.0"})
@@ -271,14 +274,16 @@ const SingleVenue: React.FC = () => {
               {venue.description}
             </p>
           </div>
-          <div className="mt-8 bg-gray-100 w-fit p-6 rounded-lg">
+          <div className="mt-8 bg-gray-100 w-fit p-2 md:p-6 rounded-lg">
+            {" "}
+            {/* Adjusted Padding */}
             <h2 className="text-xl font-bold text-tiner">Book Your Stay</h2>
             <DayPicker
               mode="range"
               selected={selectedRange}
               onSelect={setSelectedRange}
               disabled={(date: Date) => date < new Date() || isDateBooked(date)}
-              className="mt-4 bg-tin rounded-lg text-paleSand py-2 px-4"
+              className="mt-4 bg-tin rounded-lg text-paleSand py-2 px-2 md:px-4"
               classNames={{
                 nav_button_previous: "text-white hover:text-yellow-500",
                 nav_button_next: "text-white hover:text-yellow-500",
@@ -302,7 +307,7 @@ const SingleVenue: React.FC = () => {
                 min="1"
                 max={venue.maxGuests}
                 placeholder="Enter number of guests"
-                className="mt-1 px-4 py-2 border rounded-lg w-full"
+                className="mt-1 px-2 md:px-4 py-2 border rounded-lg w-full"
               />
             </div>
             <button
@@ -343,6 +348,7 @@ const SingleVenue: React.FC = () => {
             )}
           </div>
         </div>
+
         {/* Amenities */}
         <div className="mt-8">
           <h2 className="text-lg font-bold text-gray-900">Amenities</h2>
