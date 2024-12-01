@@ -1,7 +1,5 @@
-// src/components/api/user/editProfile.ts
-
-import env from "../../Config"; // Adjust the path as necessary
-import { User } from "../../../../types/User"; // Adjust the path based on where User is defined
+import env from "../../Config";
+import { User } from "../../../../types/User";
 
 interface EditProfileData {
   avatar?: {
@@ -9,7 +7,6 @@ interface EditProfileData {
     alt: string;
   };
   venueManager?: boolean;
-  // Add other editable fields as needed
 }
 
 export async function editProfile(

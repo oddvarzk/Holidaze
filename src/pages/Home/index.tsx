@@ -1,15 +1,13 @@
-// src/pages/Home.tsx
-
 import { useEffect, useState } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
-import CheckinData from "../../components/Utility/BookingSearch"; // Updated import path
+import CheckinData from "../../components/Utility/BookingSearch";
 import planeIcon from "../../assets/plane.svg";
 import palmTreeIcon from "../../assets/palmTree.svg";
 import mapIcon from "../../assets/mapIcon.svg";
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
-import { getAllVenues, Venue } from "../../components/api/venues/allVenues"; // Updated import path
-import { Link } from "react-router-dom"; // Import Link
+import { getAllVenues, Venue } from "../../components/api/venues/allVenues";
+import { Link } from "react-router-dom";
 import Loader from "../../components/Utility/Loader";
 
 export function Home() {
@@ -21,7 +19,7 @@ export function Home() {
     const fetchVenues = async () => {
       try {
         const venuesData = await getAllVenues();
-        setVenues(venuesData); // Set the venues directly
+        setVenues(venuesData);
       } catch (err) {
         setError("Failed to fetch venues.");
         console.error(err);
@@ -46,8 +44,6 @@ export function Home() {
             Escape. Seamless. Unforgettable
           </h1>
         </div>
-        {/* Add fields */}
-
         <div className="absolute bottom-5 gap-5 mb-5">
           <CheckinData />
         </div>
@@ -91,7 +87,7 @@ export function Home() {
             {venues.slice(0, 6).map((venue) => (
               <Link
                 key={venue.id}
-                to={`/venue/${venue.id}`} // Navigate to SingleVenue page
+                to={`/venue/${venue.id}`}
                 className="shadow-lg transition-transform duration-300 transform hover:scale-105"
               >
                 <div>

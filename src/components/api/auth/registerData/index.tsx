@@ -1,5 +1,3 @@
-// src/components/api/registerData/index.tsx
-
 import env from "../../Config";
 
 interface Avatar {
@@ -48,14 +46,13 @@ export async function RegisterData(
 
     const response = await fetch(registerURL, {
       method,
-      headers: { "Content-Type": "application/json" }, // Keep existing headers
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(profileData),
     });
 
     console.log("Response status:", response.status);
 
     if (!response.ok) {
-      // Attempt to parse the error message from the response body
       let errorMessage = "Failed to register.";
       try {
         const errorData = await response.json();
@@ -67,11 +64,9 @@ export async function RegisterData(
       throw new Error(errorMessage);
     }
 
-    // Optionally handle successful registration (e.g., redirect or inform the user)
     console.log("Registration successful");
   } catch (error) {
     console.error("Error during registration process:", error);
-    // Re-throw the error to be caught in handleSubmit
     if (error instanceof Error) {
       throw error;
     } else {

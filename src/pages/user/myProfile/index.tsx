@@ -1,5 +1,3 @@
-// src/pages/MyProfile/MyProfile.tsx
-
 import React, { useEffect, useState } from "react";
 import { editProfile } from "../../../components/api/user/editProfile";
 import createIcon from "../../../assets/createIcon.svg";
@@ -139,7 +137,7 @@ export function MyProfile() {
     let allVenues: Venue[] = [];
     let page = 1;
     let totalPages = 1;
-    const limit = 50; // Adjust as needed
+    const limit = 50;
 
     const accessToken = localStorage.getItem("accessToken");
 
@@ -162,7 +160,7 @@ export function MyProfile() {
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error("Error Data:", errorData); // Log error data
+          console.error("Error Data:", errorData);
           throw new Error(errorData.message || "Failed to fetch venues.");
         }
 
@@ -187,7 +185,6 @@ export function MyProfile() {
   const handleAvatarUpdate = async () => {
     if (!authUser) return;
 
-    // Basic URL validation
     try {
       new URL(newAvatarUrl);
     } catch (_) {
@@ -258,7 +255,7 @@ export function MyProfile() {
         ...authUser,
         venueManager: response.data.venueManager,
       };
-      login(accessToken, updatedUser); // Update context with new user data
+      login(accessToken, updatedUser);
 
       setUpdateSuccess("You are now a Venue Manager!");
     } catch (error: any) {

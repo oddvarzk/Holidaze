@@ -1,5 +1,3 @@
-// src/pages/auth/Login.tsx
-
 import React, { useState } from "react";
 import { LoginData } from "../../../components/api/auth/loginData";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +10,7 @@ interface Credentials {
 
 export function LoginForm() {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Access the login function from context
+  const { login } = useAuth();
   const [credentials, setCredentials] = useState<Credentials>({
     email: "",
     password: "",
@@ -26,7 +24,7 @@ export function LoginForm() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" })); // Clear error on change
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   // Client-side validation function
@@ -57,7 +55,7 @@ export function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    setErrors({}); // Clear previous errors
+    setErrors({});
 
     const isValid = validate();
 

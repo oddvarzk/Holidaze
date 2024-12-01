@@ -1,20 +1,19 @@
-// src/pages/SingleVenue/SingleVenue.tsx
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getVenueById, Venue } from "../../../components/api/venues/allVenues"; // Adjusted import path
+import { getVenueById, Venue } from "../../../components/api/venues/allVenues";
 import {
   createBooking,
   BookingRequest,
-} from "../../../components/api/bookings"; // Adjusted import
+} from "../../../components/api/bookings";
 import { DayPicker, DateRange as DayPickerDateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import "../../../styles/datepicker.css";
+
 import { parseISO, eachDayOfInterval } from "date-fns";
 import exampleImage from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
 import Loader from "../../../components/Utility/Loader";
 
-// Define a separate type for booked date ranges
 interface BookingRange {
   from: Date;
   to: Date;
@@ -50,12 +49,11 @@ const SingleVenue: React.FC = () => {
 
       setLoading(true);
       try {
-        const response = await getVenueById(id, true); // Include bookings
+        const response = await getVenueById(id, true);
         const venueData = response.data;
 
-        // Add a placeholder rating if not present
         if (!venueData.rating) {
-          venueData.rating = 4.5; // Default rating
+          venueData.rating = 4.5;
         }
 
         setVenue(venueData);
@@ -120,7 +118,7 @@ const SingleVenue: React.FC = () => {
 
     if (!isAuthenticated) {
       setBookingMessage("Please log in to make a booking.");
-      navigate("/login"); // Adjust the login route as necessary
+      navigate("/login");
       return;
     }
 
@@ -136,14 +134,11 @@ const SingleVenue: React.FC = () => {
       setBookingMessage(
         `Booking successful! Your booking ID is ${response.data.id}.`
       );
-      setSelectedRange(undefined); // Clear selection after booking
+      setSelectedRange(undefined);
 
-      // Refresh booked dates to include the new booking
-      // Re-fetch venue data to get updated bookings
       const updatedResponse = await getVenueById(id!, true);
       const updatedVenueData = updatedResponse.data;
 
-      // Add a placeholder rating if not present
       if (!updatedVenueData.rating) {
         updatedVenueData.rating = 4.5; // Default rating
       }
@@ -246,23 +241,21 @@ const SingleVenue: React.FC = () => {
         </div>
 
         {/* Booking Section */}
-        <div className="flex md:justify-between justify-center flex-wrap">
+        <div className="flex flex-col w-fit flex-wrap">
           <div>
             <p className="mt-4 text-gray-600">
               <strong className="mr-2">Description:</strong>
               {venue.description}
             </p>
           </div>
-          <div className="mt-8 bg-gray-100 p-6 rounded-lg">
-            <h2 className="text-xl text-center font-bold text-tiner">
-              Book Your Stay
-            </h2>
+          <div className="mt-8 bg-gray-100 w-fit p-6 rounded-lg">
+            <h2 className="text-xl font-bold text-tiner">Book Your Stay</h2>
             <DayPicker
               mode="range"
               selected={selectedRange}
               onSelect={setSelectedRange}
               disabled={(date: Date) => date < new Date() || isDateBooked(date)}
-              className="mt-4"
+              className="mt-4 bg-tin rounded-lg text-paleSand py-2 px-4"
             />
             <div className="mt-4">
               <label htmlFor="guests" className="block text-gray-700">

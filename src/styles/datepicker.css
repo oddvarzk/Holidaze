@@ -21,6 +21,10 @@
 }
 
 .react-datepicker__current-month {
-  color: #374151; /* Current month text color */
   font-weight: bold; /* Bold text for the current month */
+}
+
+.rdp-chevron {
+  background-color: white;
+  color: white;
 }

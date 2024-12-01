@@ -1,18 +1,10 @@
-// src/components/api/createVenue.ts
-
-import env from "../../Config"; // Adjust the path based on your project structure
+import env from "../../Config";
 import {
   CreateVenueFormValues,
   CreateVenueResponse,
 } from "../../../../types/CreateVenueTypes";
-import { load } from "../../../storage"; // Ensure the correct path
+import { load } from "../../../Storage";
 
-/**
- * Sends a POST request to create a new venue.
- * @param venueData - The data of the venue to be created.
- * @returns A promise resolving to the API response.
- * @throws Will throw an error if the request fails.
- */
 export async function createVenue(
   venueData: CreateVenueFormValues
 ): Promise<CreateVenueResponse> {
@@ -22,7 +14,7 @@ export async function createVenue(
     );
   }
 
-  const endpoint = "/holidaze/venues"; // Adjust based on your API's endpoint structure
+  const endpoint = "/holidaze/venues";
   const url = new URL(endpoint, env.apiBaseUrl).toString();
 
   // Retrieve the access token from localStorage

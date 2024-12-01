@@ -1,5 +1,3 @@
-// src/components/api/bookings/fetchBookingsByProfile.ts
-
 import env from "../../Config";
 import { UserBooking, BookingsByProfileResponse } from "../types";
 

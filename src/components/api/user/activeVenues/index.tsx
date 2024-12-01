@@ -1,6 +1,4 @@
-// src/components/api/user/activeVenues.tsx
-
-import env from "../../Config"; // Adjust the path as necessary
+import env from "../../Config";
 
 export interface Venue {
   id: string;
@@ -54,7 +52,7 @@ export async function getActiveListings(profileName: string): Promise<Venue[]> {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-        "X-Noroff-API-Key": env.apiKey, // Include the API key
+        "X-Noroff-API-Key": env.apiKey,
       },
     });
 

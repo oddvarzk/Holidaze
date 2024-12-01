@@ -1,5 +1,3 @@
-// src/components/api/user/activeVenuesWithBookings.tsx
-
 import env from "../../Config";
 
 // Interface Definitions
@@ -53,7 +51,7 @@ export interface Venue {
     lat: number;
     lng: number;
   };
-  bookings?: Booking[]; // Include bookings
+  bookings?: Booking[];
 }
 
 // Fetch active venues with bookings for a specific owner
@@ -63,7 +61,7 @@ const getActiveListingsWithBookings = async (
   let allVenues: Venue[] = [];
   let page = 1;
   let totalPages = 1;
-  const limit = 50; // Adjust as needed
+  const limit = 50;
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -86,7 +84,7 @@ const getActiveListingsWithBookings = async (
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error Data:", errorData); // Log error data
+        console.error("Error Data:", errorData);
         throw new Error(errorData.message || "Failed to fetch venues.");
       }
 

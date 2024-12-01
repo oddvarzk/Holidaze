@@ -1,7 +1,5 @@
-// src/components/api/deleteVenue.tsx
-
-import env from "../../Config"; // Adjust the path based on your project structure
-import { load } from "../../../storage"; // Ensure the correct path
+import env from "../../Config";
+import { load } from "../../../Storage";
 
 /**
  * Sends a DELETE request to delete a venue by its ID.
@@ -9,6 +7,7 @@ import { load } from "../../../storage"; // Ensure the correct path
  * @returns A promise that resolves if the request was successful.
  * @throws Will throw an error if the request fails.
  */
+
 export async function deleteVenue(venueId: string): Promise<void> {
   if (!env.apiBaseUrl) {
     throw new Error(
@@ -29,8 +28,8 @@ export async function deleteVenue(venueId: string): Promise<void> {
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${accessToken}`, // Include the access token
-        "X-Noroff-API-Key": env.apiKey, // Include the API key
+        Authorization: `Bearer ${accessToken}`,
+        "X-Noroff-API-Key": env.apiKey,
       },
     });
 

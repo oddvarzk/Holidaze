@@ -1,5 +1,3 @@
-// src/types/User.tsx
-
 export interface Avatar {
   url: string;
   alt: string;

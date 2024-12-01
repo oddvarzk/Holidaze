@@ -1,5 +1,3 @@
-// src/components/api/bookings/types.ts
-
 export interface Booking {
   id: string;
   dateFrom: string;
@@ -39,8 +37,8 @@ export interface Booking {
 }
 
 export interface BookingRequest {
-  dateFrom: string; // ISO string
-  dateTo: string; // ISO string
+  dateFrom: string;
+  dateTo: string;
   guests: number;
   venueId: string;
 }

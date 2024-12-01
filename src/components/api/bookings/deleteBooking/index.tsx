@@ -1,5 +1,3 @@
-// src/components/api/bookings/deleteBooking.ts
-
 import env from "../../Config";
 
 export async function deleteBooking(bookingId: string): Promise<void> {
@@ -31,8 +29,6 @@ export async function deleteBooking(bookingId: string): Promise<void> {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to delete booking.");
     }
-
-    // On success, the API returns a 204 No Content response.
     console.log("Booking deleted successfully.");
   } catch (error: any) {
     console.error("Error deleting booking:", error);

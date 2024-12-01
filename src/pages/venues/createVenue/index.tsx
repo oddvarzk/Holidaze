@@ -1,12 +1,10 @@
-// src/components/CreateVenueForm.tsx
-
 import { useState } from "react";
 import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import {
   CreateVenueFormValues,
   CreateVenueResponse,
 } from "../../../types/CreateVenueTypes";
-import { createVenue } from "../../../components/api/venues/createVenue"; // Adjust the path based on your project structure
+import { createVenue } from "../../../components/api/venues/createVenue";
 
 export function CreateVenueForm() {
   const {
@@ -53,7 +51,7 @@ export function CreateVenueForm() {
     try {
       const response: CreateVenueResponse = await createVenue(data);
       setSubmitSuccess(`Venue "${response.data.name}" created successfully!`);
-      reset(); // Reset the form after successful submission
+      reset();
     } catch (error: any) {
       setSubmitError(error.message || "Failed to create venue.");
     }

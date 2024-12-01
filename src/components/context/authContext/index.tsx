@@ -1,5 +1,3 @@
-// src/components/context/authContext/index.tsx
-
 import {
   createContext,
   useContext,
@@ -8,8 +6,8 @@ import {
   ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { User } from "../../../types/User"; // Ensure correct path
-import { AuthContextType } from "../../../types/authContextType"; // Ensure correct path
+import { User } from "../../../types/User";
+import { AuthContextType } from "../../../types/authContextType";
 
 // Create Context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,7 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Initialize as true
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   // Initialize authentication state from storage
@@ -51,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
 
-    setLoading(false); // Set loading to false after initialization
+    setLoading(false);
   }, []);
 
   // Login function
@@ -68,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("user");
     setIsAuthenticated(false);
     setUser(null);
-    navigate("/"); // Redirect to home after logout
+    navigate("/");
   };
 
   return (

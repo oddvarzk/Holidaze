@@ -27,7 +27,7 @@ export function RegisterForm() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProfile((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" })); // Clear error message for the field
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validate = () => {
@@ -64,7 +64,7 @@ export function RegisterForm() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    setErrors({}); // Clear previous errors
+    setErrors({});
 
     if (!validate()) {
       setLoading(false);

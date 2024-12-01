@@ -1,4 +1,3 @@
-// src/components/ContactForm.tsx
 import { useForm } from "react-hook-form";
 
 interface FormValues {
@@ -18,9 +17,6 @@ export function ContactForm() {
 
   const onSubmit = (data: FormValues) => {
     console.log("Form Data:", data);
-    // Since there's no backend connection, we'll simulate a successful submission.
-    // In a real-world scenario, you'd send `data` to your backend here.
-    // After handling the submission, reset the form fields.
     reset();
   };
 

@@ -3,11 +3,11 @@ import {
   getAllVenues,
   searchVenues,
   Venue,
-} from "../../components/api/venues/allVenues"; // Corrected import path
+} from "../../components/api/venues/allVenues";
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 import { useLocation, useNavigate } from "react-router-dom";
-import CheckinData from "../../components/Utility/BookingSearch"; // Corrected import path
+import CheckinData from "../../components/Utility/BookingSearch";
 import Loader from "../../components/Utility/Loader";
 
 const VenueList: React.FC = () => {
@@ -15,8 +15,8 @@ const VenueList: React.FC = () => {
   const [filteredVenues, setFilteredVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1); // Added for pagination
-  const itemsPerPage = 24; // Number of items per page
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 24;
 
   const location = useLocation();
   const navigate = useNavigate();

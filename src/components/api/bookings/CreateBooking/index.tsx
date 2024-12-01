@@ -1,5 +1,3 @@
-// src/components/api/bookings/createBooking.ts
-
 import env from "../../Config";
 import { BookingRequest, BookingResponse } from "../types";
 

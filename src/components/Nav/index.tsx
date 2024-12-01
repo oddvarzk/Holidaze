@@ -1,5 +1,3 @@
-// src/components/Nav.tsx
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MotionConfig, motion } from "framer-motion";
@@ -8,7 +6,7 @@ import searchIcon from "../../assets/searchIcon.svg";
 
 interface NavProps {
   isAuthenticated: boolean;
-  setIsAuthenticated: () => void; // Update the type to match logout function
+  setIsAuthenticated: () => void;
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

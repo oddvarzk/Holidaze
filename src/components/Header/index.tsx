@@ -1,5 +1,3 @@
-// src/components/Header.tsx
-
 import React, { useState } from "react";
 import Nav from "../Nav";
 import { Link, useNavigate } from "react-router-dom";
@@ -31,7 +29,7 @@ export function Header() {
         </div>
         <Nav
           isAuthenticated={isAuthenticated}
-          setIsAuthenticated={logout} // Pass the logout function as setIsAuthenticated
+          setIsAuthenticated={logout}
           setShowSearch={setShowSearch}
         />
       </header>

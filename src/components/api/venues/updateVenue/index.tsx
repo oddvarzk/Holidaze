@@ -1,7 +1,5 @@
-// src/components/api/updateVenue.tsx
-
-import env from "../../Config"; // Adjust the path based on your project structure
-import { load } from "../../../storage"; // Ensure the correct path
+import env from "../../Config";
+import { load } from "../../../Storage";
 import {
   CreateVenueFormValues,
   CreateVenueResponse,
@@ -14,6 +12,7 @@ import {
  * @returns A promise resolving to the API response.
  * @throws Will throw an error if the request fails.
  */
+
 export async function updateVenue(
   venueId: string,
   venueData: CreateVenueFormValues
@@ -24,7 +23,7 @@ export async function updateVenue(
     );
   }
 
-  const endpoint = `/holidaze/venues/${venueId}`; // Adjust based on your API's endpoint structure
+  const endpoint = `/holidaze/venues/${venueId}`;
   const url = new URL(endpoint, env.apiBaseUrl).toString();
 
   // Retrieve the access token from localStorage
@@ -38,8 +37,8 @@ export async function updateVenue(
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`, // Include the access token
-        "X-Noroff-API-Key": env.apiKey, // Include the API key
+        Authorization: `Bearer ${accessToken}`,
+        "X-Noroff-API-Key": env.apiKey,
       },
       body: JSON.stringify(venueData),
     });

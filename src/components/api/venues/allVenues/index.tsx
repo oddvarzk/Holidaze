@@ -1,5 +1,3 @@
-// src/components/api/venues/venuesAPI.tsx
-
 import env from "../../Config";
 
 // Interface Definitions
@@ -61,7 +59,7 @@ export const getAllVenues = async (): Promise<Venue[]> => {
   let allVenues: Venue[] = [];
   let page = 1;
   let totalPages = 1;
-  const limit = 50; // Adjust as needed
+  const limit = 50;
 
   try {
     do {
@@ -77,7 +75,7 @@ export const getAllVenues = async (): Promise<Venue[]> => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error Data:", errorData); // Log error data
+        console.error("Error Data:", errorData);
         throw new Error(errorData.message || "Failed to fetch venues.");
       }
 
@@ -138,21 +136,20 @@ export const getVenueById = async (
 
 // Search Venues with Query and Optional Bookings and Date Range
 export const searchVenues = async (
-  query: string = "", // Default to an empty string
+  query: string = "",
   dateFrom?: string,
   dateTo?: string
 ): Promise<Venue[]> => {
   const endpoint = `/holidaze/venues/search`;
   const url = new URL(endpoint, env.apiBaseUrl);
 
-  // Append query parameter (ensure it exists)
-  url.searchParams.append("q", query || "all"); // Use "all" as a default if query is empty
+  url.searchParams.append("q", query || "all");
 
   // Append optional date filters
   if (dateFrom) url.searchParams.append("dateFrom", dateFrom);
   if (dateTo) url.searchParams.append("dateTo", dateTo);
 
-  console.log("Search URL:", url.toString()); // Debugging
+  console.log("Search URL:", url.toString());
 
   try {
     const response = await fetch(url.toString(), {
@@ -164,7 +161,7 @@ export const searchVenues = async (
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Error Data:", errorData); // Log API error details
+      console.error("Error Data:", errorData);
       throw new Error(errorData.message || "Failed to search venues.");
     }
 
@@ -176,5 +173,4 @@ export const searchVenues = async (
   }
 };
 
-// No default export to prevent conflicts
 export default getAllVenues;

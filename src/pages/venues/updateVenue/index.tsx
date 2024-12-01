@@ -1,15 +1,13 @@
-// src/components/UpdateVenuePage.tsx
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import updateVenue from "../../../components/api/venues/updateVenue";
 import getActiveListings from "../../../components/api/user/activeVenues";
-import { load } from "../../../components/storage";
+import { load } from "../../../components/Storage";
 import { CreateVenueFormValues } from "../../../types/CreateVenueTypes";
 
 const UpdateVenuePage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get the venue ID from the route params
+  const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);

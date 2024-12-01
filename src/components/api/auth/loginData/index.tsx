@@ -1,5 +1,3 @@
-// src/components/api/loginData.tsx
-
 import env from "../../Config";
 
 interface Credentials {
@@ -22,8 +20,7 @@ interface User {
   email: string;
   avatar: Avatar;
   banner: Banner;
-  venueManager: boolean; // Included venueManager property
-  // Include other user fields as necessary
+  venueManager: boolean;
 }
 
 interface LoginResponse {
@@ -33,8 +30,7 @@ interface LoginResponse {
     avatar: Avatar;
     banner: Banner;
     accessToken: string;
-    venueManager: boolean; // Ensure venueManager is included in the response
-    // Include other user fields as necessary
+    venueManager: boolean;
   };
   meta: any;
 }
@@ -51,9 +47,8 @@ export async function LoginData(
     );
   }
 
-  // Include the _holidaze=true query parameter
   const loginURL = new URL(action, env.apiBaseUrl);
-  loginURL.searchParams.append("_holidaze", "true"); // Adds ?_holidaze=true to the URL
+  loginURL.searchParams.append("_holidaze", "true");
 
   console.log("Login URL with query params:", loginURL.toString());
 
@@ -69,7 +64,6 @@ export async function LoginData(
     console.log("Response status:", response.status);
 
     if (!response.ok) {
-      // Attempt to parse the error message from the response body
       let errorMessage = "Failed to login.";
       try {
         const errorData = await response.json();
@@ -81,17 +75,15 @@ export async function LoginData(
       throw new Error(errorMessage);
     }
 
-    // Parse the response body to get the access token and user info
     const responseData: LoginResponse = await response.json();
     console.log("Login successful", responseData);
 
     // Extract the accessToken and user data from responseData.data
     const { accessToken, venueManager, ...userData } = responseData.data;
 
-    // Ensure venueManager is included in the user object
     const user: User = {
       ...userData,
-      venueManager, // Include the venueManager property
+      venueManager,
     };
 
     console.log("User object to be saved:", user);
@@ -100,7 +92,6 @@ export async function LoginData(
     return { accessToken, user };
   } catch (error) {
     console.error("Error during login process:", error);
-    // Re-throw the error to be caught in handleSubmit
     if (error instanceof Error) {
       throw error;
     } else {
