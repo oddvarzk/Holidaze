@@ -25,7 +25,7 @@ export function ContactForm() {
   };
 
   return (
-    <div className="max-w-lg p-6 bg-tin text-paleSand rounded-md mt-5">
+    <div className="max-w-lg p-6 bg-tin text-charcoal rounded-md mt-5 mx-auto">
       {/* Success Message */}
       {isSubmitSuccessful && (
         <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
