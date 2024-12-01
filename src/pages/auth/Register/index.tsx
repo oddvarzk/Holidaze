@@ -64,7 +64,7 @@ export function RegisterForm() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    setErrors({});
+    setErrors({}); // Clear previous errors
 
     if (!validate()) {
       setLoading(false);
