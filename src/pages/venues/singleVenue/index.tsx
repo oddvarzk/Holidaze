@@ -12,6 +12,8 @@ import "react-day-picker/dist/style.css";
 import { parseISO, eachDayOfInterval } from "date-fns";
 import exampleImage from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
+import StarRating from "../../../components/StarRating"; // Import the StarRating component
+import Loader from "../../../components/Loader";
 
 // Define a separate type for booked date ranges
 interface BookingRange {
@@ -50,10 +52,17 @@ const SingleVenue: React.FC = () => {
       setLoading(true);
       try {
         const response = await getVenueById(id, true); // Include bookings
-        setVenue(response.data);
+        const venueData = response.data;
 
-        if (response.data.bookings) {
-          const bookingRanges: BookingRange[] = response.data.bookings.map(
+        // Add a placeholder rating if not present
+        if (!venueData.rating) {
+          venueData.rating = 4.5; // Default rating
+        }
+
+        setVenue(venueData);
+
+        if (venueData.bookings) {
+          const bookingRanges: BookingRange[] = venueData.bookings.map(
             (booking) => ({
               from: parseISO(booking.dateFrom),
               to: parseISO(booking.dateTo),
@@ -133,8 +142,17 @@ const SingleVenue: React.FC = () => {
       // Refresh booked dates to include the new booking
       // Re-fetch venue data to get updated bookings
       const updatedResponse = await getVenueById(id!, true);
-      if (updatedResponse.data.bookings) {
-        const updatedRanges: BookingRange[] = updatedResponse.data.bookings.map(
+      const updatedVenueData = updatedResponse.data;
+
+      // Add a placeholder rating if not present
+      if (!updatedVenueData.rating) {
+        updatedVenueData.rating = 4.5; // Default rating
+      }
+
+      setVenue(updatedVenueData);
+
+      if (updatedVenueData.bookings) {
+        const updatedRanges: BookingRange[] = updatedVenueData.bookings.map(
           (booking) => ({
             from: parseISO(booking.dateFrom),
             to: parseISO(booking.dateTo),
@@ -152,7 +170,7 @@ const SingleVenue: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        Loading...
+        <Loader />
       </div>
     );
   }
@@ -175,13 +193,15 @@ const SingleVenue: React.FC = () => {
   }
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen font-Montserrat">
       <div className="container mx-auto px-5 py-10">
         {/* Venue Title */}
-        <h1 className="text-3xl font-bold text-gray-900">{venue.name}</h1>
+        <h1 className="text-3xl font-Playfair text-center font-medium text-gray-900">
+          {venue.name}
+        </h1>
 
         {/* Venue Images */}
-        <div className="flex flex-wrap gap-4 mt-4">
+        <div className="flex justify-center flex-wrap gap-4 mt-4">
           {venue.media && venue.media.length > 0 ? (
             venue.media.map((mediaItem, index) => (
               <img
@@ -210,7 +230,6 @@ const SingleVenue: React.FC = () => {
               {venue.location.city}, {venue.location.country}
             </p>
           </div>
-          <p className="mt-4 text-gray-600">{venue.description}</p>
 
           <div className="flex justify-between items-center mt-6">
             <div>
@@ -222,74 +241,84 @@ const SingleVenue: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center">
-              <p className="text-lg text-gray-700">{venue.rating} / 5</p>
+              <p className="font-Montserrat">Rating</p>
+              <StarRating rating={venue.rating} />
             </div>
           </div>
         </div>
 
         {/* Booking Section */}
-        <div className="mt-8 bg-gray-100 p-6 rounded-lg">
-          <h2 className="text-xl font-bold text-gray-900">Book Your Stay</h2>
-          <DayPicker
-            mode="range"
-            selected={selectedRange}
-            onSelect={setSelectedRange}
-            disabled={(date: Date) => date < new Date() || isDateBooked(date)}
-            className="mt-4"
-          />
-          <div className="mt-4">
-            <label htmlFor="guests" className="block text-gray-700">
-              Number of Guests:
-            </label>
-            <input
-              type="number"
-              id="guests"
-              value={guests}
-              onChange={(e) => setGuests(parseInt(e.target.value))}
-              min="1"
-              max={venue.maxGuests}
-              placeholder="Enter number of guests"
-              className="mt-1 px-4 py-2 border rounded-lg w-full"
-            />
+        <div className="flex md:justify-between justify-center flex-wrap">
+          <div>
+            <p className="mt-4 text-gray-600">
+              <strong className="mr-2">Description:</strong>
+              {venue.description}
+            </p>
           </div>
-          <button
-            onClick={checkAvailability}
-            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            Check Availability
-          </button>
-          {availabilityChecked && (
-            <p
-              className={`mt-4 ${
-                isAvailable ? "text-green-500" : "text-red-500"
-              }`}
-            >
-              {isAvailable
-                ? "The venue is available for the selected dates!"
-                : "Selected dates are unavailable. Please try other dates."}
-            </p>
-          )}
-          {isAvailable && (
+          <div className="mt-8 bg-gray-100 p-6 rounded-lg">
+            <h2 className="text-xl text-center font-bold text-tiner">
+              Book Your Stay
+            </h2>
+            <DayPicker
+              mode="range"
+              selected={selectedRange}
+              onSelect={setSelectedRange}
+              disabled={(date: Date) => date < new Date() || isDateBooked(date)}
+              className="mt-4"
+            />
+            <div className="mt-4">
+              <label htmlFor="guests" className="block text-gray-700">
+                Number of Guests:
+              </label>
+              <input
+                type="number"
+                id="guests"
+                value={guests}
+                onChange={(e) => setGuests(parseInt(e.target.value))}
+                min="1"
+                max={venue.maxGuests}
+                placeholder="Enter number of guests"
+                className="mt-1 px-4 py-2 border rounded-lg w-full"
+              />
+            </div>
             <button
-              onClick={handleBooking}
-              className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              onClick={checkAvailability}
+              className="mt-4 px-6 py-2 bg-btns w-full text-white rounded-lg hover:bg-amber-100 hover:text-charcoal hover:border-b-2 hover:border hover:border-charcoal transition"
             >
-              Book Now
+              Check Availability
             </button>
-          )}
-          {bookingMessage && (
-            <p
-              className={`mt-4 ${
-                bookingMessage.startsWith("Booking successful")
-                  ? "text-green-500"
-                  : "text-red-500"
-              }`}
-            >
-              {bookingMessage}
-            </p>
-          )}
+            {availabilityChecked && (
+              <p
+                className={`mt-4 ${
+                  isAvailable ? "text-charcoal" : "text-red-500"
+                }`}
+              >
+                {isAvailable
+                  ? "The venue is available for the selected dates!"
+                  : "Selected dates are unavailable. Please try other dates."}
+              </p>
+            )}
+            {isAvailable && (
+              <button
+                onClick={handleBooking}
+                className="mt-4 px-6 py-2 bg-tiner w-full text-white rounded-lg hover:bg-amber-100 hover:text-charcoal hover:border-b-2 hover:border hover:border-charcoal transition"
+              >
+                Confirm Booking
+              </button>
+            )}
+            {bookingMessage && (
+              <p
+                className={`mt-4 ${
+                  bookingMessage.startsWith("Booking successful")
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {bookingMessage}
+              </p>
+            )}
+          </div>
         </div>
-
         {/* Amenities */}
         <div className="mt-8">
           <h2 className="text-lg font-bold text-gray-900">Amenities</h2>
