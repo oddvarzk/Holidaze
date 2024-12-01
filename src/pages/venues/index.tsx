@@ -16,7 +16,7 @@ const VenueList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1); // Added for pagination
-  const itemsPerPage = 25; // Number of items per page
+  const itemsPerPage = 24; // Number of items per page
 
   const location = useLocation();
   const navigate = useNavigate();
