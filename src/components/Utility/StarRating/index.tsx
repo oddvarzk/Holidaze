@@ -15,11 +15,11 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
   for (let i = 1; i <= 5; i++) {
     if (i <= Math.floor(rating)) {
       stars.push(
-        <FontAwesomeIcon key={i} icon={fullStar} className="text-yellow-500" />
+        <FontAwesomeIcon key={i} icon={fullStar} className="text-tin" />
       );
     } else if (i - rating < 1) {
       stars.push(
-        <FontAwesomeIcon key={i} icon={halfStar} className="text-yellow-500" />
+        <FontAwesomeIcon key={i} icon={halfStar} className="text-tin" />
       );
     } else {
       stars.push(
