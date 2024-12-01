@@ -1,15 +1,15 @@
 // src/components/VenueList.tsx
 
 import React, { useEffect, useState } from "react";
-import { getAllVenues, Venue } from "../../components/api/venues/allVenues"; // Adjust the import path
 import {
-  fetchBookingsByDates,
-  Booking,
-} from "../../components/api/bookings/bookingsAPI"; // Import bookings API
+  getAllVenues,
+  searchVenues,
+  Venue,
+} from "../../components/api/venues/allVenues"; // Corrected import path
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
-import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
-import CheckinData from "../../components/BookingSearch"; // Import the updated CheckinData component
+import { useLocation, useNavigate } from "react-router-dom";
+import CheckinData from "../../components/BookingSearch"; // Corrected import path
 
 const VenueList: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -18,7 +18,7 @@ const VenueList: React.FC = () => {
   const [error, setError] = useState<string>("");
 
   const location = useLocation();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   // Parse query parameters from URL
   const params = new URLSearchParams(location.search);
@@ -30,10 +30,17 @@ const VenueList: React.FC = () => {
     const fetchVenues = async () => {
       setLoading(true);
       try {
-        const allVenues = await getAllVenues();
-        setVenues(allVenues);
-      } catch (err) {
-        setError("Failed to fetch venues.");
+        if (query || dateFrom || dateTo) {
+          // If there's a search query or date range, use the search function
+          const searchResults = await searchVenues(query, dateFrom, dateTo);
+          setVenues(searchResults);
+        } else {
+          // If no search parameters, fetch all venues
+          const allVenues = await getAllVenues();
+          setVenues(allVenues);
+        }
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch venues.");
         console.error("Error fetching venues:", err);
       } finally {
         setLoading(false);
@@ -41,10 +48,10 @@ const VenueList: React.FC = () => {
     };
 
     fetchVenues();
-  }, []);
+  }, [query, dateFrom, dateTo]);
 
   useEffect(() => {
-    const filterVenues = async () => {
+    const filterVenues = () => {
       if (!dateFrom || !dateTo) {
         // If no dates are provided, filter by query only
         const trimmedQuery = query.trim().toLowerCase();
@@ -60,28 +67,26 @@ const VenueList: React.FC = () => {
       }
 
       try {
-        // Fetch bookings within the specified dates for all venues
-        // Assuming fetchBookingsByDates can fetch bookings for all venues by passing an empty venueId
-        // If not, consider implementing an API endpoint that returns booked venue IDs for the date range
+        // Filter venues based on availability
+        const desiredFrom = new Date(dateFrom);
+        const desiredTo = new Date(dateTo);
 
-        const bookings: Booking[] = await fetchBookingsByDates(
-          "",
-          dateFrom,
-          dateTo
-        ); // Adjust if necessary
-
-        // Collect all booked venue IDs
-        const bookedVenueIds = new Set<string>();
-        bookings.forEach((booking) => {
-          if (booking.venue && booking.venue.id) {
-            bookedVenueIds.add(booking.venue.id);
+        const availableVenues = venues.filter((venue) => {
+          if (!venue.bookings || venue.bookings.length === 0) {
+            // If no bookings, venue is available
+            return true;
           }
-        });
 
-        // Filter out venues that are booked
-        const availableVenues = venues.filter(
-          (venue) => !bookedVenueIds.has(venue.id)
-        );
+          // Check if any booking overlaps with desired dates
+          const hasOverlap = venue.bookings.some((booking) => {
+            const bookingFrom = new Date(booking.dateFrom);
+            const bookingTo = new Date(booking.dateTo);
+
+            return desiredFrom <= bookingTo && desiredTo >= bookingFrom;
+          });
+
+          return !hasOverlap;
+        });
 
         // Further filter by query if present
         const trimmedQuery = query.trim().toLowerCase();
@@ -92,7 +97,7 @@ const VenueList: React.FC = () => {
           : availableVenues;
 
         setFilteredVenues(finalFiltered);
-      } catch (err) {
+      } catch (err: any) {
         setError("Failed to filter venues by availability.");
         console.error("Error filtering venues:", err);
       }
@@ -135,7 +140,7 @@ const VenueList: React.FC = () => {
                 <div
                   key={venue.id}
                   className="shadow-lg transition-transform duration-300 transform hover:scale-105 cursor-pointer"
-                  onClick={() => handleVenueClick(venue.id)} // Handle click
+                  onClick={() => handleVenueClick(venue.id)}
                 >
                   {/* Venue card content */}
                   <div>
