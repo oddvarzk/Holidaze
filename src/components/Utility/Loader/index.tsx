@@ -1,7 +1,7 @@
 // src/components/Loader.tsx
 
 import React from "react";
-import "../../styles/loader.css"; // Adjust the path to your Loader.css file
+import "../../../styles/loader.css"; // Adjust the path to your Loader.css file
 
 const Loader: React.FC = () => {
   return (
