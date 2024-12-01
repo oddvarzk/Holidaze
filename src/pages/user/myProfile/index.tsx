@@ -7,7 +7,7 @@ import getActiveListings, {
 } from "../../../components/api/user/activeVenues";
 import deleteVenue from "../../../components/api/venues/deleteVenue";
 import { useAuth } from "../../../components/context/authContext";
-import Loader from "../../../components/Loader";
+import Loader from "../../../components/Utility/Loader";
 
 interface Avatar {
   url: string;

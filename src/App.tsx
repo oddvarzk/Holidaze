@@ -8,7 +8,7 @@ import MyProfile from "./pages/user/myProfile";
 import VenueList from "./pages/venues";
 import About from "./pages/about";
 import ProtectedRoute from "./components/ProtectedRoute";
-import CreateVenuePage from "./components/CreateVenuePage";
+import CreateVenuePage from "./components/Forms/CreateVenuePage/index.tsx";
 import UpdateVenuePage from "./pages/venues/updateVenue";
 import SingleVenue from "./pages/venues/singleVenue";
 import NotFound from "./pages/NotFound.tsx";
