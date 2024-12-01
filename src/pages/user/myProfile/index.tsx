@@ -1,14 +1,13 @@
-// src/pages/user/MyProfile.tsx
-
 import React, { useEffect, useState } from "react";
-import { editProfile } from "../../../components/api/user/editProfile"; // Ensure this is correctly imported
+import { editProfile } from "../../../components/api/user/editProfile";
 import createIcon from "../../../assets/createIcon.svg";
 import { Link } from "react-router-dom";
 import getActiveListings, {
   Venue,
-} from "../../../components/api/user/activeVenues"; // Ensure this is correctly imported
+} from "../../../components/api/user/activeVenues";
 import deleteVenue from "../../../components/api/venues/deleteVenue";
-import { useAuth } from "../../../components/context/authContext"; // Ensure this is correctly imported
+import { useAuth } from "../../../components/context/authContext";
+import Loader from "../../../components/Loader";
 
 interface Avatar {
   url: string;
@@ -30,7 +29,7 @@ interface User {
 }
 
 export function MyProfile() {
-  const { user: authUser, login } = useAuth(); // Access user and login from context
+  const { user: authUser, login } = useAuth();
   const [newAvatarUrl, setNewAvatarUrl] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [updateError, setUpdateError] = useState<string>("");
@@ -160,7 +159,7 @@ export function MyProfile() {
   };
 
   if (!authUser) {
-    return <p>Loading user data...</p>;
+    return <Loader />;
   }
 
   return (
@@ -207,7 +206,7 @@ export function MyProfile() {
             </div>
           </div>
         </div>
-        {/* Rest of your component */}
+        {/* User Information */}
         <div>
           <div className="mx-auto mb-10 w-fit md:max-w-full">
             <h1 className="font-Playfair text-2xl py-5 text-tiner font-medium">
@@ -232,7 +231,6 @@ export function MyProfile() {
                     <span className="font-semibold">Venue Manager: </span>
                     {authUser.venueManager ? "Yes" : "No"}
                   </p>
-                  {/* Add more user info as needed */}
                 </div>
               </div>
               <div className="px-5 mb-3 items-center flex flex-col font-Montserrat">
@@ -335,8 +333,6 @@ export function MyProfile() {
                           </p>
                         </div>
                       </div>
-                      {/* Add Update and Delete Buttons */}
-                      <div className="flex gap-4 mt-4"></div>
                     </div>
                   ))
                 )}

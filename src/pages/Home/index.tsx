@@ -10,6 +10,7 @@ import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 import { getAllVenues, Venue } from "../../components/api/venues/allVenues"; // Updated import path
 import { Link } from "react-router-dom"; // Import Link
+import Loader from "../../components/Loader";
 
 export function Home() {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -82,11 +83,11 @@ export function Home() {
         </h1>
         {/* Recommended Venue Boxes */}
         {loading ? (
-          <p>Loading recommended stays...</p>
+          <Loader />
         ) : error ? (
           <p>{error}</p>
         ) : (
-          <div className="flex flex-wrap justify-center py-5 gap-10">
+          <div className="flex flex-wrap justify-center py-5 gap-10 mb-10">
             {venues.slice(0, 6).map((venue) => (
               <Link
                 key={venue.id}
