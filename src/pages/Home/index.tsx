@@ -1,3 +1,5 @@
+// src/pages/Home/Home.tsx
+
 import { useEffect, useState } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
 import CheckinData from "../../components/Utility/BookingSearch";
@@ -33,21 +35,32 @@ export function Home() {
 
   return (
     <div className="bg-paleSand">
-      {/* Main bg and Search data */}
+      {/* Main Background and Search Data */}
       <div
         className="relative bg-no-repeat bg-cover md:h-[60vh] h-[40vh] w-full flex items-center justify-center bg-top sm:bg-center"
         style={{ backgroundImage: `url(${greeceBackg})` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40 text-opacity-0"></div>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+
+        {/* Centered Heading */}
         <div className="w-full h-full flex justify-center items-center">
           <h1 className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-Montserrat font-light text-white">
             Escape. Seamless. Unforgettable
           </h1>
         </div>
-        <div className="absolute bottom-5 gap-5 mb-5">
+
+        {/* Search Component Overlay on Large Screens */}
+        <div className="hidden md:flex absolute bottom-5">
           <CheckinData />
         </div>
       </div>
+
+      {/* Search Component Below Image on Small Screens */}
+      <div className="flex md:hidden justify-center mt-4 px-5">
+        <CheckinData />
+      </div>
+
       {/* 2nd Main Info */}
       <div className="text-center py-5 px-2 mt-5">
         <h1 className="font-Playfair font-normal text-tiner text-3xl py-2">
@@ -60,7 +73,8 @@ export function Home() {
           perfect destination.
         </p>
       </div>
-      {/* Front page travel icons */}
+
+      {/* Front Page Travel Icons */}
       <div className="flex md:justify-between lg:px-60 justify-center gap-16 py-7 px-2 mt-5">
         <div className="px-2">
           <img src={planeIcon} alt="Plane Icon" className="h-28 w-28" />
@@ -72,7 +86,9 @@ export function Home() {
           <img src={mapIcon} alt="Map Icon" className="h-28 w-28" />
         </div>
       </div>
+
       <div className="border border-b-2 mt-6"></div>
+
       <div className="px-5 py-5 mt-4">
         <h1 className="font-Playfair font-normal text-center text-tiner text-3xl py-5">
           Recommended stays
@@ -81,14 +97,14 @@ export function Home() {
         {loading ? (
           <Loader />
         ) : error ? (
-          <p>{error}</p>
+          <p className="text-red-500 text-center">{error}</p>
         ) : (
           <div className="flex flex-wrap justify-center py-5 gap-10 mb-10">
             {venues.slice(0, 6).map((venue) => (
               <Link
                 key={venue.id}
                 to={`/venue/${venue.id}`}
-                className="shadow-lg transition-transform duration-300 transform hover:scale-105"
+                className="shadow-lg transition-transform duration-300 transform hover:scale-105 bg-white rounded-lg overflow-hidden"
               >
                 <div>
                   <img
@@ -109,7 +125,7 @@ export function Home() {
                   <h3 className="px-3 text-tiner text-lg font-medium font-Montserrat">
                     {venue.name}
                   </h3>
-                  <div className="flex px-2">
+                  <div className="flex px-2 items-center">
                     <img
                       src={locationIcon}
                       alt="Location Icon"
@@ -121,7 +137,7 @@ export function Home() {
                   </div>
                   <div className="px-4 py-1">
                     <p className="text-base font-Montserrat">
-                      ${venue.price} /night
+                      {venue.price} NOK /night
                     </p>
                   </div>
                   <div>
