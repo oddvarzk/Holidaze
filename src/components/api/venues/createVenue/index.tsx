@@ -3,7 +3,7 @@ import {
   CreateVenueFormValues,
   CreateVenueResponse,
 } from "../../../../types/CreateVenueTypes";
-import { load } from "../../../Storage/index";
+import { load } from "../../../storage/index";
 
 export async function createVenue(
   venueData: CreateVenueFormValues

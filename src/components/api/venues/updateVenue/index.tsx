@@ -1,5 +1,5 @@
 import env from "../../Config";
-import { load } from "../../../Storage";
+import { load } from "../../../storage";
 import {
   CreateVenueFormValues,
   CreateVenueResponse,

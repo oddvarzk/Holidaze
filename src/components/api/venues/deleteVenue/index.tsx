@@ -1,5 +1,5 @@
 import env from "../../Config";
-import { load } from "../../../Storage/index.tsx";
+import { load } from "../../../storage";
 
 /**
  * Sends a DELETE request to delete a venue by its ID.
