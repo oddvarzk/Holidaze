@@ -44,11 +44,11 @@ export function Home() {
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
         {/* Centered Heading */}
-        <div className="w-full h-full flex justify-center items-center">
-          <h1 className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-Montserrat font-light text-white">
-            Escape. Seamless. Unforgettable
-          </h1>
-        </div>
+        <div className="w-full h-full flex justify-center items-center"></div>
+
+        <h1 className="text-2xl sm:text-xl md:text-2xl lg:text-3xl font-Montserrat font-extralight text-white text-center absolute">
+          Escape. Seamless. Unforgettable
+        </h1>
 
         {/* Search Component Overlay on Large Screens */}
         <div className="hidden md:flex absolute bottom-5">

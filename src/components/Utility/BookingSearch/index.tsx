@@ -105,7 +105,7 @@ const CheckinData: React.FC = () => {
           }
           onClick={handleCheckinClick}
           placeholder="Check-in Date"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-lg text-gray-700 focus:ring-2 focus:ring-amber-100 focus:outline-none cursor-pointer"
+          className="w-full px-4 py-2 border border-tin rounded-md shadow-lg text-gray-700 focus:ring-2 focus:ring-amber-100 focus:outline-none cursor-pointer"
         />
         {showCheckinCalendar && (
           <div className="absolute z-10 mt-2">
@@ -128,7 +128,7 @@ const CheckinData: React.FC = () => {
           value={selectedRange.to ? selectedRange.to.toLocaleDateString() : ""}
           onClick={handleCheckoutClick}
           placeholder="Check-out Date"
-          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-lg text-gray-700 focus:ring-2 focus:ring-amber-100 focus:outline-none cursor-pointer"
+          className="w-full px-4 py-2 border border-tin rounded-md shadow-lg text-gray-700 focus:ring-2 focus:ring-amber-100 focus:outline-none cursor-pointer"
         />
         {showCheckoutCalendar && (
           <div className="absolute z-10 mt-2">
