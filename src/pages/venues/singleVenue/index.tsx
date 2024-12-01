@@ -2,17 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getVenueById, Venue } from "../../../components/api/venues/allVenues"; // Updated import path
+import { getVenueById, Venue } from "../../../components/api/venues/allVenues"; // Adjusted import path
 import {
   createBooking,
   BookingRequest,
-} from "../../../components/api/bookings/bookingsAPI";
+} from "../../../components/api/bookings"; // Adjusted import
 import { DayPicker, DateRange as DayPickerDateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { parseISO, eachDayOfInterval } from "date-fns";
 import exampleImage from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
-import StarRating from "../../../components/Utility/StarRating"; // Import the StarRating component
+import StarRating from "../../../components/Utility/StarRating";
 import Loader from "../../../components/Utility/Loader";
 
 // Define a separate type for booked date ranges
@@ -208,7 +208,7 @@ const SingleVenue: React.FC = () => {
                 key={index}
                 src={mediaItem.url}
                 alt={mediaItem.alt || "Venue Image"}
-                loading="lazy" // Add lazy loading
+                loading="lazy"
                 className="h-64 w-full md:w-1/2 lg:w-1/3 object-cover rounded-lg shadow-md"
               />
             ))
@@ -216,7 +216,7 @@ const SingleVenue: React.FC = () => {
             <img
               src={exampleImage}
               alt="Default Venue"
-              loading="lazy" // Add lazy loading
+              loading="lazy"
               className="h-64 w-full md:w-1/2 lg:w-1/3 object-cover rounded-lg shadow-md"
             />
           )}

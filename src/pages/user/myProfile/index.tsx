@@ -1,3 +1,5 @@
+// src/pages/MyProfile/MyProfile.tsx
+
 import React, { useEffect, useState } from "react";
 import { editProfile } from "../../../components/api/user/editProfile";
 import createIcon from "../../../assets/createIcon.svg";
@@ -8,6 +10,11 @@ import getActiveListings, {
 import deleteVenue from "../../../components/api/venues/deleteVenue";
 import { useAuth } from "../../../components/context/authContext";
 import Loader from "../../../components/Utility/Loader";
+import {
+  fetchBookingsByProfile,
+  deleteBooking, // Import the new function
+  UserBooking,
+} from "../../../components/api/bookings";
 
 interface Avatar {
   url: string;
@@ -39,9 +46,15 @@ export function MyProfile() {
   const [isBecomingVenueManager, setIsBecomingVenueManager] =
     useState<boolean>(false);
 
+  // State variables for bookings
+  const [userBookings, setUserBookings] = useState<UserBooking[]>([]);
+  const [bookingsLoading, setBookingsLoading] = useState<boolean>(true);
+  const [bookingsError, setBookingsError] = useState<string>("");
+
   useEffect(() => {
     if (authUser) {
       console.log("Authenticated User:", authUser);
+
       // Fetch active listings for the profile
       getActiveListings(authUser.name)
         .then((listings) => {
@@ -51,6 +64,19 @@ export function MyProfile() {
         .catch((error) => {
           setListingsError(error.message || "Failed to fetch listings.");
           console.error("Error fetching listings:", error);
+        });
+
+      // Fetch bookings by profile
+      fetchBookingsByProfile(authUser.name)
+        .then((bookings) => {
+          setUserBookings(bookings);
+          console.log("User Bookings:", bookings);
+          setBookingsLoading(false);
+        })
+        .catch((error) => {
+          setBookingsError(error.message || "Failed to fetch bookings.");
+          console.error("Error fetching bookings:", error);
+          setBookingsLoading(false);
         });
     }
   }, [authUser]);
@@ -154,6 +180,23 @@ export function MyProfile() {
       } catch (error: any) {
         console.error("Failed to delete venue:", error);
         setListingsError(error.message || "Failed to delete venue.");
+      }
+    }
+  };
+
+  // New function to handle deleting a booking
+  const handleDeleteBooking = async (bookingId: string) => {
+    if (window.confirm("Are you sure you want to cancel this booking?")) {
+      try {
+        await deleteBooking(bookingId);
+        // Remove the deleted booking from the state
+        setUserBookings((prevBookings) =>
+          prevBookings.filter((booking) => booking.id !== bookingId)
+        );
+        console.log("Booking deleted successfully.");
+      } catch (error: any) {
+        console.error("Failed to delete booking:", error);
+        setBookingsError(error.message || "Failed to delete booking.");
       }
     }
   };
@@ -340,22 +383,22 @@ export function MyProfile() {
             )}
           </div>
 
-          {/* Bookings Section Removed */}
-          {/* <div className="px-5 w-fit mx-auto mb-10">
+          {/* Bookings Section */}
+          <div className="px-5 w-fit mx-auto mb-10">
             <h1 className="font-Playfair text-2xl text-tiner font-medium mb-5">
               Your Upcoming Bookings
             </h1>
 
             {/* Loading Indicator */}
-          {/* {bookingsLoading && <p>Loading your bookings...</p>} */}
+            {bookingsLoading && <p>Loading your bookings...</p>}
 
-          {/* Error State */}
-          {/* {bookingsError && (
+            {/* Error State */}
+            {bookingsError && (
               <p className="text-red-500 mt-2">{bookingsError}</p>
-            )} */}
+            )}
 
-          {/* Display Bookings */}
-          {/* {!bookingsLoading && !bookingsError && (
+            {/* Display Bookings */}
+            {!bookingsLoading && !bookingsError && (
               <div className="flex flex-col gap-5">
                 {userBookings.length === 0 ? (
                   <p className="text-gray-500">You have no bookings.</p>
@@ -365,15 +408,17 @@ export function MyProfile() {
                       key={booking.id}
                       className="bg-tin px-5 text-paleSand rounded-lg py-5 font-Montserrat"
                     >
-                      <h2 className="font-semibold text-lg mb-2">
-                        Booking ID: {booking.id}
-                      </h2>
-                      <p className="font-medium text-sm">
-                        Venue:{" "}
-                        <span className="font-light">
-                          {booking.venue?.name || "Venue information unavailable"}
-                        </span>
-                      </p>
+                      <div className="flex justify-between items-center">
+                        <h2 className="font-semibold text-lg mb-2">
+                          Booking ID: {booking.id}
+                        </h2>
+                        <button
+                          onClick={() => handleDeleteBooking(booking.id)}
+                          className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
+                        >
+                          Cancel Booking
+                        </button>
+                      </div>
                       <p className="font-medium text-sm">
                         Date From:{" "}
                         <span className="font-light">
@@ -401,7 +446,7 @@ export function MyProfile() {
                 )}
               </div>
             )}
-          </div> */}
+          </div>
         </div>
       </div>
     </div>
