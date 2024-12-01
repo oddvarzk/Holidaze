@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/authContext"; // Adjust the import path as needed
+import { useAuth } from "../../context/authContext"; // Adjust the import path as needed
 
 interface ProtectedRouteProps {
   children: JSX.Element;
