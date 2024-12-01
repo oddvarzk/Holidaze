@@ -13,6 +13,7 @@ import { parseISO, eachDayOfInterval } from "date-fns";
 import exampleImage from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
 import Loader from "../../../components/Utility/Loader";
+import StarRating from "../../../components/Utility/StarRating";
 
 interface BookingRange {
   from: Date;
@@ -52,8 +53,14 @@ const SingleVenue: React.FC = () => {
         const response = await getVenueById(id, true);
         const venueData = response.data;
 
-        if (!venueData.rating) {
-          venueData.rating = 4.5;
+        // Validate and sanitize the rating
+        if (typeof venueData.rating !== "number" || isNaN(venueData.rating)) {
+          venueData.rating = 0; // Default rating if invalid
+        } else {
+          // Ensure rating is within 0 to 5
+          venueData.rating = Math.max(0, Math.min(venueData.rating, 5));
+          // Round to the nearest half to align with star ratings
+          venueData.rating = Math.round(venueData.rating * 2) / 2;
         }
 
         setVenue(venueData);
@@ -139,8 +146,20 @@ const SingleVenue: React.FC = () => {
       const updatedResponse = await getVenueById(id!, true);
       const updatedVenueData = updatedResponse.data;
 
-      if (!updatedVenueData.rating) {
-        updatedVenueData.rating = 4.5; // Default rating
+      // Validate and sanitize the updated rating
+      if (
+        typeof updatedVenueData.rating !== "number" ||
+        isNaN(updatedVenueData.rating)
+      ) {
+        updatedVenueData.rating = 0; // Default rating if invalid
+      } else {
+        // Ensure rating is within 0 to 5
+        updatedVenueData.rating = Math.max(
+          0,
+          Math.min(updatedVenueData.rating, 5)
+        );
+        // Round to the nearest half to align with star ratings
+        updatedVenueData.rating = Math.round(updatedVenueData.rating * 2) / 2;
       }
 
       setVenue(updatedVenueData);
@@ -190,12 +209,12 @@ const SingleVenue: React.FC = () => {
     <div className="bg-white min-h-screen font-Montserrat">
       <div className="container mx-auto px-5 py-10">
         {/* Venue Title */}
-        <h1 className="text-3xl font-Playfair text-center font-medium text-gray-900">
+        <h1 className="text-3xl font-Playfair md:text-left text-center font-medium text-gray-900">
           {venue.name}
         </h1>
 
         {/* Venue Images */}
-        <div className="flex justify-center flex-wrap gap-4 mt-4">
+        <div className="flex justify-center md:justify-start mb-3 flex-wrap gap-4 mt-4">
           {venue.media && venue.media.length > 0 ? (
             venue.media.map((mediaItem, index) => (
               <img
@@ -215,6 +234,13 @@ const SingleVenue: React.FC = () => {
             />
           )}
         </div>
+        <div className="flex items-center mb-5">
+          {/* Integrate StarRating Component */}
+          <StarRating rating={venue.rating || 0} />
+          <span className="ml-2 text-sm text-gray-700">
+            ({venue.rating?.toFixed(1) || "0.0"})
+          </span>
+        </div>
 
         {/* Venue Details */}
         <div className="mt-6">
@@ -225,17 +251,14 @@ const SingleVenue: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex items-center mt-6">
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-tin">
                 {venue.price} NOK / night
               </p>
               <p className="text-sm text-gray-500">
                 Max Guests: {venue.maxGuests}
               </p>
-            </div>
-            <div className="flex items-center">
-              <p className="font-Montserrat">Rating</p>
             </div>
           </div>
         </div>
@@ -256,6 +279,16 @@ const SingleVenue: React.FC = () => {
               onSelect={setSelectedRange}
               disabled={(date: Date) => date < new Date() || isDateBooked(date)}
               className="mt-4 bg-tin rounded-lg text-paleSand py-2 px-4"
+              classNames={{
+                nav_button_previous: "text-white hover:text-yellow-500",
+                nav_button_next: "text-white hover:text-yellow-500",
+                day_selected: "bg-yellow-500 text-black",
+                day_today: "border border-yellow-500",
+                day_disabled: "text-gray-400",
+              }}
+              modifiersClassNames={{
+                hover: "hover:bg-yellow-200",
+              }}
             />
             <div className="mt-4">
               <label htmlFor="guests" className="block text-gray-700">
