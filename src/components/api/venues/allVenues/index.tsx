@@ -1,3 +1,5 @@
+// src/components/api/venues/venuesAPI.tsx
+
 import env from "../../Config";
 
 // Interface Definitions
@@ -61,30 +63,36 @@ export const getAllVenues = async (): Promise<Venue[]> => {
   let totalPages = 1;
   const limit = 50; // Adjust as needed
 
-  do {
-    const url = `${env.apiBaseUrl}/holidaze/venues?page=${page}&limit=${limit}`;
+  try {
+    do {
+      const url = `${env.apiBaseUrl}/holidaze/venues?page=${page}&limit=${limit}`;
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Noroff-API-Key": env.apiKey,
-      },
-    });
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Noroff-API-Key": env.apiKey,
+        },
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to fetch venues.");
-    }
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error Data:", errorData); // Log error data
+        throw new Error(errorData.message || "Failed to fetch venues.");
+      }
 
-    const data: VenuesResponse = await response.json();
-    allVenues = allVenues.concat(data.data);
+      const data: VenuesResponse = await response.json();
+      allVenues = allVenues.concat(data.data);
 
-    totalPages = data.meta.pageCount;
-    page += 1;
-  } while (page <= totalPages);
+      totalPages = data.meta.pageCount;
+      page += 1;
+    } while (page <= totalPages);
 
-  return allVenues;
+    return allVenues;
+  } catch (error: any) {
+    console.error("Error in getAllVenues:", error);
+    throw error;
+  }
 };
 
 // Fetch a single venue by ID with optional bookings
@@ -99,19 +107,74 @@ export const getVenueById = async (
     url.searchParams.append("_bookings", "true");
   }
 
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Noroff-API-Key": env.apiKey,
-    },
-  });
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to fetch venue.");
+  // Include API Key only if not fetching bookings
+  if (!includeBookings) {
+    headers["X-Noroff-API-Key"] = env.apiKey;
   }
 
-  const data: SingleVenueResponse = await response.json();
-  return data;
+  try {
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: headers,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error Data:", errorData); // Log error data
+      throw new Error(errorData.message || "Failed to fetch venue.");
+    }
+
+    const data: SingleVenueResponse = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error("Error in getVenueById:", error);
+    throw error;
+  }
 };
+
+// Search Venues with Query and Optional Bookings and Date Range
+export const searchVenues = async (
+  query: string = "", // Default to an empty string
+  dateFrom?: string,
+  dateTo?: string
+): Promise<Venue[]> => {
+  const endpoint = `/holidaze/venues/search`;
+  const url = new URL(endpoint, env.apiBaseUrl);
+
+  // Append query parameter (ensure it exists)
+  url.searchParams.append("q", query || "all"); // Use "all" as a default if query is empty
+
+  // Append optional date filters
+  if (dateFrom) url.searchParams.append("dateFrom", dateFrom);
+  if (dateTo) url.searchParams.append("dateTo", dateTo);
+
+  console.log("Search URL:", url.toString()); // Debugging
+
+  try {
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Error Data:", errorData); // Log API error details
+      throw new Error(errorData.message || "Failed to search venues.");
+    }
+
+    const data: VenuesResponse = await response.json();
+    return data.data;
+  } catch (error: any) {
+    console.error("Error in searchVenues:", error);
+    throw error;
+  }
+};
+
+// No default export to prevent conflicts
+export default getAllVenues;
