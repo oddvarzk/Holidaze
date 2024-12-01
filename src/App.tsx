@@ -6,7 +6,6 @@ import RegisterForm from "./pages/auth/Register";
 import LoginForm from "./pages/auth/Login";
 import MyProfile from "./pages/user/myProfile";
 import VenueList from "./pages/venues";
-import About from "./pages/about";
 import ProtectedRoute from "./components/Utility/ProtectedRoute";
 import CreateVenuePage from "./components/Forms/CreateVenuePage/index.tsx";
 import UpdateVenuePage from "./pages/venues/updateVenue";
@@ -30,7 +29,6 @@ function App() {
           }
         />
         <Route path="venues" element={<VenueList />} />
-        <Route path="about" element={<About />} />
         <Route path="venue/:id" element={<SingleVenue />} />{" "}
         <Route
           path="createVenue"

@@ -91,11 +91,6 @@ export function Nav({
           </Link>
         </li>
         <li className="hover:underline mt-2">
-          <Link to="/about" onClick={() => setIsOpen(false)}>
-            About us
-          </Link>
-        </li>
-        <li className="hover:underline mt-2">
           <Link to="/venues" onClick={() => setIsOpen(false)}>
             Venues
           </Link>
