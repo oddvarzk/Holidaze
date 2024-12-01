@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
-import CheckinData from "../../components/BookingSearch";
+import CheckinData from "../../components/BookingSearch"; // Updated import path
 import planeIcon from "../../assets/plane.svg";
 import palmTreeIcon from "../../assets/palmTree.svg";
 import mapIcon from "../../assets/mapIcon.svg";
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
-import { getAllVenues, Venue } from "../../components/api/venues/allVenues";
+import { getAllVenues, Venue } from "../../components/api/venues/allVenues"; // Updated import path
 import { Link } from "react-router-dom"; // Import Link
 
 export function Home() {
@@ -45,6 +45,8 @@ export function Home() {
             Escape. Seamless. Unforgettable
           </h1>
         </div>
+        {/* Add fields */}
+
         <div className="absolute bottom-5 gap-5 mb-5">
           <CheckinData />
         </div>
