@@ -7,8 +7,8 @@ import {
 import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 import { useLocation, useNavigate } from "react-router-dom";
-import CheckinData from "../../components/BookingSearch"; // Corrected import path
-import Loader from "../../components/Loader";
+import CheckinData from "../../components/Utility/BookingSearch"; // Corrected import path
+import Loader from "../../components/Utility/Loader";
 
 const VenueList: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);

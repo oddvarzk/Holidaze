@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import greeceBackg from "../../assets/greeceBackg.jpg";
-import CheckinData from "../../components/BookingSearch"; // Updated import path
+import CheckinData from "../../components/Utility/BookingSearch"; // Updated import path
 import planeIcon from "../../assets/plane.svg";
 import palmTreeIcon from "../../assets/palmTree.svg";
 import mapIcon from "../../assets/mapIcon.svg";
@@ -10,7 +10,7 @@ import example from "../../assets/example.png";
 import locationIcon from "../../assets/locationIcon.svg";
 import { getAllVenues, Venue } from "../../components/api/venues/allVenues"; // Updated import path
 import { Link } from "react-router-dom"; // Import Link
-import Loader from "../../components/Loader";
+import Loader from "../../components/Utility/Loader";
 
 export function Home() {
   const [venues, setVenues] = useState<Venue[]>([]);
