@@ -9,10 +9,6 @@ import getActiveListings, {
 } from "../../../components/api/user/activeVenues"; // Ensure this is correctly imported
 import deleteVenue from "../../../components/api/venues/deleteVenue";
 import { useAuth } from "../../../components/context/authContext"; // Ensure this is correctly imported
-import {
-  fetchBookingsByProfile,
-  UserBooking,
-} from "../../../components/api/bookings/bookingsAPI"; // Import the new function and interface
 
 interface Avatar {
   url: string;
@@ -44,34 +40,18 @@ export function MyProfile() {
   const [isBecomingVenueManager, setIsBecomingVenueManager] =
     useState<boolean>(false);
 
-  // New States for User Bookings
-  const [userBookings, setUserBookings] = useState<UserBooking[]>([]);
-  const [bookingsError, setBookingsError] = useState<string | null>(null);
-  const [bookingsLoading, setBookingsLoading] = useState<boolean>(false);
-
   useEffect(() => {
     if (authUser) {
+      console.log("Authenticated User:", authUser);
       // Fetch active listings for the profile
       getActiveListings(authUser.name)
         .then((listings) => {
           setActiveListings(listings);
+          console.log("Active Listings:", listings);
         })
         .catch((error) => {
           setListingsError(error.message || "Failed to fetch listings.");
-        });
-
-      // Fetch bookings made by the profile
-      setBookingsLoading(true);
-      fetchBookingsByProfile(authUser.name)
-        .then((bookings) => {
-          setUserBookings(bookings);
-          setBookingsError(null);
-        })
-        .catch((error) => {
-          setBookingsError(error.message || "Failed to fetch bookings.");
-        })
-        .finally(() => {
-          setBookingsLoading(false);
+          console.error("Error fetching listings:", error);
         });
     }
   }, [authUser]);
@@ -364,22 +344,22 @@ export function MyProfile() {
             )}
           </div>
 
-          {/* Active Bookings Section */}
-          <div className="px-5 w-fit mx-auto mb-10">
+          {/* Bookings Section Removed */}
+          {/* <div className="px-5 w-fit mx-auto mb-10">
             <h1 className="font-Playfair text-2xl text-tiner font-medium mb-5">
-              Your upcomming bookings
+              Your Upcoming Bookings
             </h1>
 
             {/* Loading Indicator */}
-            {bookingsLoading && <p>Loading your bookings...</p>}
+          {/* {bookingsLoading && <p>Loading your bookings...</p>} */}
 
-            {/* Error State */}
-            {bookingsError && (
+          {/* Error State */}
+          {/* {bookingsError && (
               <p className="text-red-500 mt-2">{bookingsError}</p>
-            )}
+            )} */}
 
-            {/* Display Bookings */}
-            {!bookingsLoading && !bookingsError && (
+          {/* Display Bookings */}
+          {/* {!bookingsLoading && !bookingsError && (
               <div className="flex flex-col gap-5">
                 {userBookings.length === 0 ? (
                   <p className="text-gray-500">You have no bookings.</p>
@@ -392,6 +372,12 @@ export function MyProfile() {
                       <h2 className="font-semibold text-lg mb-2">
                         Booking ID: {booking.id}
                       </h2>
+                      <p className="font-medium text-sm">
+                        Venue:{" "}
+                        <span className="font-light">
+                          {booking.venue?.name || "Venue information unavailable"}
+                        </span>
+                      </p>
                       <p className="font-medium text-sm">
                         Date From:{" "}
                         <span className="font-light">
@@ -419,7 +405,7 @@ export function MyProfile() {
                 )}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
