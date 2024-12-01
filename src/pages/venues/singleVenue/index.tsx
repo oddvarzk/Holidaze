@@ -12,7 +12,6 @@ import "react-day-picker/dist/style.css";
 import { parseISO, eachDayOfInterval } from "date-fns";
 import exampleImage from "../../../assets/example.png";
 import locationIcon from "../../../assets/locationIcon.svg";
-import StarRating from "../../../components/Utility/StarRating";
 import Loader from "../../../components/Utility/Loader";
 
 // Define a separate type for booked date ranges
@@ -242,7 +241,6 @@ const SingleVenue: React.FC = () => {
             </div>
             <div className="flex items-center">
               <p className="font-Montserrat">Rating</p>
-              <StarRating rating={venue.rating} />
             </div>
           </div>
         </div>
