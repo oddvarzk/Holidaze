@@ -25,7 +25,7 @@ export function Nav({
   };
 
   return (
-    <nav className="text-amber-100">
+    <nav className="text-paleSand">
       {/* Search Icon for small screens */}
       <button
         onClick={() => {
@@ -53,19 +53,19 @@ export function Nav({
             {/* Top Bar */}
             <motion.span
               variants={VARIANTS.top}
-              className="absolute h-1 w-7 bg-amber-100"
+              className="absolute h-1 w-7 bg-paleSand"
               style={{ y: "-50%", left: "50%", x: "-50%", top: "30%" }}
             />
             {/* Middle Bar */}
             <motion.span
               variants={VARIANTS.middle}
-              className="absolute h-1 w-7 bg-amber-100"
+              className="absolute h-1 w-7 bg-paleSand"
               style={{ left: "50%", x: "-50%", top: "50%", y: "-50%" }}
             />
             {/* Bottom Bar */}
             <motion.span
               variants={VARIANTS.bottom}
-              className="absolute h-1 w-2 bg-amber-100"
+              className="absolute h-1 w-2 bg-paleSand"
               style={{
                 x: "-50%",
                 y: "50%",
@@ -110,7 +110,7 @@ export function Nav({
             <li className="hover:underline">
               <button
                 onClick={handleLogout}
-                className="text-amber-100 font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
+                className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
               >
                 Logout
               </button>
@@ -123,7 +123,7 @@ export function Nav({
               <Link
                 to="/login"
                 onClick={() => setIsOpen(false)}
-                className="text-amber-100 font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
+                className="text-paleSand font-normal py-2 px-4 bg-btns hover:bg-amber-100 hover:text-black"
               >
                 Login
               </Link>

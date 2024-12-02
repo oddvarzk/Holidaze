@@ -1,5 +1,3 @@
-// src/components/api/venues/updateVenue.tsx
-
 import env from "../../Config";
 import {
   CreateVenueFormValues,
