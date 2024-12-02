@@ -86,8 +86,9 @@ export function Footer() {
         <div className="flex justify-center md:justify-between items-center">
           {/* Copyright */}
           <div className="mb-4 md:mb-0">
-            <p className="text-sm">
-              © {currentYear} Holidaze. All rights reserved.
+            <p className="text-sm font-Metamorphous">
+              <span className="font-Montserrat">© {currentYear}</span> Holidaze.{" "}
+              <span className="font-Montserrat">All rights reserved</span>.
             </p>
           </div>
 
