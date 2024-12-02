@@ -16,7 +16,7 @@ export function Footer() {
           {/* About Section */}
           <div className="mb-6 md:mb-0">
             <h2 className="text-xl font-light mb-2 font-Playfair">
-              About Holidaze
+              About <span className="font-Metamorphous">Holidaze</span>
             </h2>
             <p className="text-sm">
               Holidaze is your go-to platform for discovering and listing unique
