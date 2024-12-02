@@ -1,5 +1,6 @@
+// src/components/api/venues/updateVenue.tsx
+
 import env from "../../Config";
-import { load } from "../../../storage";
 import {
   CreateVenueFormValues,
   CreateVenueResponse,
@@ -12,7 +13,6 @@ import {
  * @returns A promise resolving to the API response.
  * @throws Will throw an error if the request fails.
  */
-
 export async function updateVenue(
   venueId: string,
   venueData: CreateVenueFormValues
@@ -26,8 +26,10 @@ export async function updateVenue(
   const endpoint = `/holidaze/venues/${venueId}`;
   const url = new URL(endpoint, env.apiBaseUrl).toString();
 
-  // Retrieve the access token from localStorage
-  const accessToken = load("accessToken");
+  // Retrieve the access token directly from localStorage
+  const accessToken = localStorage.getItem("accessToken");
+  console.log("Access Token Retrieved for Venue:", accessToken); // Debugging
+
   if (!accessToken) {
     throw new Error("Access token not found. Please log in again.");
   }
@@ -59,7 +61,7 @@ export async function updateVenue(
     console.log("Venue update successful:", responseData);
 
     return responseData;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error during venue update process:", error);
     if (error instanceof Error) {
       throw error;

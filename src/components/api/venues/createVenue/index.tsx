@@ -3,7 +3,6 @@ import {
   CreateVenueFormValues,
   CreateVenueResponse,
 } from "../../../../types/CreateVenueTypes";
-import { load } from "../../../storage/index";
 
 export async function createVenue(
   venueData: CreateVenueFormValues
@@ -14,11 +13,13 @@ export async function createVenue(
     );
   }
 
-  const endpoint = "/holidaze/venues";
+  const endpoint = `/holidaze/venues`;
   const url = new URL(endpoint, env.apiBaseUrl).toString();
 
-  // Retrieve the access token from localStorage
-  const accessToken = load("accessToken");
+  // Retrieve the access token directly from localStorage
+  const accessToken = localStorage.getItem("accessToken");
+  console.log("Access Token Retrieved for Venue:", accessToken); // Debugging
+
   if (!accessToken) {
     throw new Error("Access token not found. Please log in again.");
   }
@@ -52,13 +53,12 @@ export async function createVenue(
     console.log("Venue creation successful:", responseData);
 
     return responseData;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error during venue creation process:", error);
-    if (error instanceof Error) {
-      throw error;
-    } else {
-      throw new Error("An unknown error occurred during venue creation.");
-    }
+    throw new Error(
+      error.message || "An unknown error occurred during venue creation."
+    );
   }
 }
+
 export default createVenue;

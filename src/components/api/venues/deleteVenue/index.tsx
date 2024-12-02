@@ -1,5 +1,4 @@
 import env from "../../Config";
-import { load } from "../../../storage";
 
 /**
  * Sends a DELETE request to delete a venue by its ID.
@@ -7,7 +6,6 @@ import { load } from "../../../storage";
  * @returns A promise that resolves if the request was successful.
  * @throws Will throw an error if the request fails.
  */
-
 export async function deleteVenue(venueId: string): Promise<void> {
   if (!env.apiBaseUrl) {
     throw new Error(
@@ -15,11 +13,13 @@ export async function deleteVenue(venueId: string): Promise<void> {
     );
   }
 
-  const endpoint = `/holidaze/venues/${venueId}`;
+  const endpoint = `/holidaze/venues/${encodeURIComponent(venueId)}`;
   const url = new URL(endpoint, env.apiBaseUrl).toString();
 
-  // Retrieve the access token from localStorage
-  const accessToken = load("accessToken");
+  // Retrieve the access token directly from localStorage
+  const accessToken = localStorage.getItem("accessToken");
+  console.log("Access Token Retrieved for Venue:", accessToken); // Debugging
+
   if (!accessToken) {
     throw new Error("Access token not found. Please log in again.");
   }
@@ -34,11 +34,20 @@ export async function deleteVenue(venueId: string): Promise<void> {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to delete venue.");
+      // Attempt to parse the error message from the response body
+      let errorMessage = "Failed to delete venue.";
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+        console.error("Error response:", errorData);
+      } catch (parseError) {
+        console.error("Error parsing error response:", parseError);
+      }
+      throw new Error(errorMessage);
     }
 
     console.log("Venue deletion successful.");
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error during venue deletion process:", error);
     if (error instanceof Error) {
       throw error;
