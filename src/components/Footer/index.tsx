@@ -14,15 +14,16 @@ export function Footer() {
         {/* Main Footer Content */}
         <div className="flex flex-col md:flex-row md:justify-between">
           {/* About Section */}
-          <div className="mb-6 md:mb-0">
+          <div className="mb-6 md:mb-0 md:w-1/2">
             <h2 className="text-xl font-light mb-2 font-Playfair">
               About{" "}
               <span className="font-Metamorphous text-base">Holidaze</span>
             </h2>
             <p className="text-sm">
-              Holidaze is your go-to platform for discovering and listing unique
-              venues. Whether you're hosting a small gathering or a large event,
-              we've got you covered.
+              Holidaze is the ultimate destination for finding and reserving
+              unique venues for vacations, events, and memorable gatherings.
+              From tranquil retreats to vibrant event spaces, we provide a wide
+              range of options to cater to every occasion and taste
             </p>
           </div>
 
