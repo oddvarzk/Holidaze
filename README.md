@@ -1,6 +1,6 @@
 # Holidaze Booking Website
 
-![Home Image](./assets/holidazeHome.png)
+![Home Image](./src/assets/holidazeHome.png)
 
 Holidaze is a booking platform that connects users with venue managers, enabling users to find and book accommodations quickly and securely. Built with **Vite**, **React**, and **TypeScript**, this project aims to provide a smooth and efficient booking experience, with a focus on reliability and ease of use.
 
