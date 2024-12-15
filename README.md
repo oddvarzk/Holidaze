@@ -1,4 +1,6 @@
-# Holidaze
+# Holidaze Booking Website
+
+![Home Image](./assets/holidazeHome.png)
 
 Holidaze is a booking platform that connects users with venue managers, enabling users to find and book accommodations quickly and securely. Built with **Vite**, **React**, and **TypeScript**, this project aims to provide a smooth and efficient booking experience, with a focus on reliability and ease of use.
 
@@ -207,9 +209,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For any inquiries or feedback, please contact:
 
-- **Name:** Oddvar Zk
-- **Email:** [oddvar@example.com](mailto:oddvar@example.com)
+- **Name:** Oddvar Zakarias Kristiansen
+- **Email:** [oddvarzk@gmail.com](mailto:oddvarzk@gmail.com)
 - **GitHub:** [oddvarzk](https://github.com/oddvarzk)
-- **LinkedIn:** [Oddvar Zk](https://www.linkedin.com/in/oddvarzk)
+- **LinkedIn:** [Oddvar Zakarias Kristiansen](https://www.linkedin.com/in/oddvar-zakarias-kristiansen-22b583262/)
 
 ---
